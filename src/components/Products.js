@@ -4,7 +4,7 @@ import ProductCard from "./ProductCard";
 function Products ({productsList}) {
     const displayProducts = productsList.map(product => 
     <div className="col-md-2 mt-4">
-        <ProductCard key={product.id} product={product}/>
+        <ProductCard key={product.id} product={product} index={product.id} />
     </div>)
 
     return (
