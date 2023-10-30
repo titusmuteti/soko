@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { BsFillCartFill } from "react-icons/bs";
-import { Modal, Button } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
+import { Modal, Button, Row, Col } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css'; 
+import DeliveryInfo from './DeliveryInfo';
 
 function ProductDescription({ product }) {
   const [showModal, setShowModal] = useState(false);
@@ -32,13 +33,18 @@ function ProductDescription({ product }) {
               <p className="card-text">
                 <small className="text-muted">Last updated 3 mins ago</small>
               </p>
-              <button className="btn btn-primary w-100 m-4">
+              <Button className="btn btn-primary w-100 m-4">
                 <span className='me-3'><BsFillCartFill/></span>Add to Cart
-              </button>
+              </Button>
             </div>
           </div>
         </div>
       </div>
+
+      {/* creating a separate component on the right side  */}
+      <Col md={6} style={{marginLeft:'40px', width:"28%"}}>
+          <DeliveryInfo /> 
+      </Col>
 
       {/* pop up when product is selected */}
       <Modal show={showModal} onHide={handleClose} centered>
