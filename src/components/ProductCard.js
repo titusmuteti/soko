@@ -8,7 +8,7 @@ function ProductCard ({product, index}) {
          <Card style={{width: '12rem', height:'70%'}}>
             <Card.Img variant="top" src={product.image} style={{height: '70%'}}></Card.Img>
             <Card.Body>
-                <Card.Title className="fs-6">{product.title}</Card.Title>
+                <Card.Title className="fs-6 text-muted">{product.title}</Card.Title>
                 <Card.Text> KSh{product.price} </Card.Text>
             </Card.Body>
         </Card>
