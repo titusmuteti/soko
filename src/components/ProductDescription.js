@@ -1,31 +1,60 @@
-import React from 'react'
+import React, { useState } from 'react';
+import { BsFillCartFill } from "react-icons/bs";
+import { Modal, Button } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
 
-function ProductDescription({product}) {
+function ProductDescription({ product }) {
+  const [showModal, setShowModal] = useState(false);
+
+  const handleClose = () => setShowModal(false);
+  const handleShow = () => setShowModal(true);
+
   return (
-    <div className="card" style={{ maxWidth: '540px' }}>
-    <div className="row g-0">
-      <div className="col-md-4">
-        <img
-          src={product.image}
-          alt="..."
-          className="img-fluid"
-        />
-      </div>
-      <div className="col-md-8">
-        <div className="card-body">
-          <h5 className="card-title">Card title</h5>
-          <p className="card-text">
-            {product.description}
-            {product.price}
-          </p>
-          <p className="card-text">
-            <small className="text-muted">Last updated 3 mins ago</small>
-          </p>
+    <div className="container d-flex justify-content-center mt-5">
+      <div className="card" style={{ maxWidth: '700px' }}>
+        <div className="row g-0">
+          <div className="col-md-4" onClick={handleShow} style={{ cursor: 'pointer' }}>
+            <img
+              src={product.image}
+              alt="..."
+              className="img-fluid h-100 w-100"
+            />
+          </div>
+          <div className="col-md-8">
+            <div className="card-body">
+              <h3 className="card-title">{product.title}</h3>
+              <hr /> {/* Add a horizontal line below the title */}
+              <h6 className="card-text">
+                {product.description}
+              </h6>
+              <hr /> {/* Add a horizontal line below the title */}
+              <h3 className="fw-bold">KSh{product.price}</h3>
+              <p className="card-text">
+                <small className="text-muted">Last updated 3 mins ago</small>
+              </p>
+              <button className="btn btn-primary w-100 m-4">
+                <span className='me-3'><BsFillCartFill/></span>Add to Cart
+              </button>
+            </div>
+          </div>
         </div>
       </div>
+
+      {/* pop up when product is selected */}
+      <Modal show={showModal} onHide={handleClose} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Product Image</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <img
+            src={product.image}
+            alt="Product"
+            className="img-fluid"
+          />
+        </Modal.Body>
+      </Modal>
     </div>
-  </div>
-  )
+  );
 }
 
-export default ProductDescription
+export default ProductDescription;
