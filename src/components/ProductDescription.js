@@ -3,6 +3,7 @@ import { BsFillCartFill } from "react-icons/bs";
 import { Modal, Button, Row, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css'; 
 import DeliveryInfo from './DeliveryInfo';
+import ProductSpecification from './ProductSpecifications';
 
 function ProductDescription({ product }) {
   const [showModal, setShowModal] = useState(false);
@@ -11,6 +12,7 @@ function ProductDescription({ product }) {
   const handleShow = () => setShowModal(true);
 
   return (
+    <>
     <div className="container d-flex justify-content-center mt-5">
       <div className="card" style={{ maxWidth: '700px' }}>
         <div className="row g-0">
@@ -25,14 +27,8 @@ function ProductDescription({ product }) {
             <div className="card-body">
               <h3 className="card-title">{product.title}</h3>
               <hr /> {/* Add a horizontal line below the title */}
-              <h6 className="card-text">
-                {product.description}
-              </h6>
-              <hr /> {/* Add a horizontal line below the title */}
               <h3 className="fw-bold">KSh{product.price}</h3>
-              <p className="card-text">
-                <small className="text-muted">Last updated 3 mins ago</small>
-              </p>
+
               <Button className="btn btn-primary w-100 m-4">
                 <span className='me-3'><BsFillCartFill/></span>Add to Cart
               </Button>
@@ -45,6 +41,7 @@ function ProductDescription({ product }) {
       <Col md={6} style={{marginLeft:'40px', width:"28%"}}>
           <DeliveryInfo /> 
       </Col>
+
 
       {/* pop up when product is selected */}
       <Modal show={showModal} onHide={handleClose} centered>
@@ -60,6 +57,9 @@ function ProductDescription({ product }) {
         </Modal.Body>
       </Modal>
     </div>
+
+    <ProductSpecification product={product}/>
+    </>
   );
 }
 
