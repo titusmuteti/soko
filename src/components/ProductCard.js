@@ -1,19 +1,18 @@
 import React from "react";
-import Button from 'react-bootstrap/Button';
+import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
 import Card from 'react-bootstrap/Card';
 
-function ProductCard ({product}) {
+function ProductCard ({product, index}) {
     return (
-       <a href="#" style={{textDecoration:'none'}}>
+       <Link to={`/products/${index}`} style={{textDecoration:'none'}}>
          <Card style={{width: '12rem', height:'70%'}}>
             <Card.Img variant="top" src={product.image} style={{height: '70%'}}></Card.Img>
             <Card.Body>
                 <Card.Title className="fs-6">{product.title}</Card.Title>
                 <Card.Text> KSh{product.price} </Card.Text>
-                {/* <Button variant="primary">Button</Button> */}
             </Card.Body>
         </Card>
-       </a>
+       </Link>
     )
 }
 
