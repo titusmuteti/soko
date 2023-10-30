@@ -2,9 +2,9 @@ import React from "react";
 import ProductCard from "./ProductCard";
 
 function Products ({productsList}) {
-    const displayProducts = productsList.map(product => 
+    const displayProducts = productsList.map((product, index) => 
     <div className="col-md-2 mt-4">
-        <ProductCard key={product.id} product={product} index={product.id} />
+        <ProductCard key={index} product={product} index={index} />
     </div>)
 
     return (
