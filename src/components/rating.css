@@ -1,0 +1,14 @@
+.rating-stars {
+    font-size: 24px;
+  }
+  
+  .star {
+    cursor: pointer;
+    color: #ccc; /* Default color for inactive stars */
+    margin: 0 2px;
+  }
+  
+  .star.active {
+    color: #ffcc00; /* Custom yellow color for active (selected) stars */
+  }
+  
