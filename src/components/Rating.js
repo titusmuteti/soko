@@ -23,7 +23,7 @@ function Rating({product}) {
             </span>
             ))}
         </div>
-        <small>{count} items left</small>
+        <small className="p-4">{count} items left</small>
         </div>
     );
 }
