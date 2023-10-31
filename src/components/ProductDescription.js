@@ -4,6 +4,7 @@ import { Modal, Button, Row, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css'; 
 import DeliveryInfo from './DeliveryInfo';
 import ProductSpecification from './ProductSpecifications';
+import Rating from './Rating';
 
 function ProductDescription({ product }) {
   const [showModal, setShowModal] = useState(false);
@@ -26,8 +27,12 @@ function ProductDescription({ product }) {
           <div className="col-md-8">
             <div className="card-body">
               <h3 className="card-title">{product.title}</h3>
+
               <hr /> {/* Add a horizontal line below the title */}
               <h3 className="fw-bold">KSh{product.price}</h3>
+
+              {/* Product Rating */}
+              <Rating product={product}/>
 
               <Button className="btn btn-primary w-100 m-4">
                 <span className='me-3'><BsFillCartFill/></span>Add to Cart

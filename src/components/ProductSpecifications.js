@@ -7,7 +7,11 @@ function ProductSpecification ({product}) {
             <hr/>
             <h5>Description: 
                 {<h6>{product.description}</h6>}
+            <h5>Category
+                <h6>{product.category}</h6>
             </h5>
+            </h5>
+             <hr/>
             <h5>
                 Specification:
                 <h6>made in-</h6>
