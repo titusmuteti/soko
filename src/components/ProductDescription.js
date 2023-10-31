@@ -34,8 +34,8 @@ function ProductDescription({ product }) {
 
   return (
     <>
-      <div className="container d-flex justify-content-center mt-5">
-        <div className="card" style={{ maxWidth: '700px' }}>
+      <div className="container d-flex justify-content-center mt-5" >
+        <div className="card" style={{ maxWidth: '1000px', maxHeight:"100%" }}>
           <div className="row g-0">
             <div className="col-md-4" onClick={handleShow} style={{ cursor: 'pointer' }}>
               <img
