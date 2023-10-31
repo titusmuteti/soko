@@ -11,7 +11,7 @@ function Rating({product}) {
 
     return (
         <div>
-        <p>Rating: {rating} stars</p>
+        <small>Rating: {rating} stars</small>
         <div className="rating-stars">
             {[1, 2, 3, 4, 5].map((star) => (
             <span
@@ -23,6 +23,7 @@ function Rating({product}) {
             </span>
             ))}
         </div>
+        <small>{count} items left</small>
         </div>
     );
 }
