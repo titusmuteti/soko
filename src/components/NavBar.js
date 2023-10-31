@@ -8,9 +8,9 @@ import { BsFillCartFill } from "react-icons/bs";
 
 function NavBar() {
   return (
-    <Navbar expand="lg" className="bg-body-tertiary" style={{marginTop: '50px'}}>
+    <Navbar expand="lg" className="bg-white" style={{marginTop: '50px'}}>
       <Container>
-        <Navbar.Brand href="#" style={{fontWeight: 'bold'}}>SOKO</Navbar.Brand>
+        <Navbar.Brand href="/" style={{fontWeight: 'bold'}}>SOKO</Navbar.Brand>
         <Navbar.Toggle aria-controls="navbarScroll" />
 
         <Form className="d-flex pl-4" style={{width: '50em', marginLeft:'5em'}}>
@@ -20,7 +20,7 @@ function NavBar() {
               className="me-2"
               aria-label="Search"
             />
-            <Button variant="outline-success" style={{background:'yellow'}}>Search</Button>
+            <Button variant="outline-success" style={{background:'orange'}}>SEARCH</Button>
           </Form>
 
         <Navbar.Collapse id="navbarScroll">
@@ -30,7 +30,7 @@ function NavBar() {
           >
             <Nav.Link href="#" style={{marginLeft: '2em'}}>Help</Nav.Link>
 
-            <Nav.Link href="#" style={{marginLeft: '2em'}}>{<BsFillCartFill/>}</Nav.Link>
+            <Nav.Link href="/cart" style={{marginLeft: '2em'}}>{<BsFillCartFill style={{fontSize:"30px"}}/>} Cart</Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>
