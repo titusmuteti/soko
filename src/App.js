@@ -6,6 +6,7 @@ import Products from './components/Products';
 import ProductDetailsWrapper from './components/ProductDetailsWraper';
 import Cart from './pages/Cart';
 import './app.css';
+import { CartProvider } from './CartContext';
 
 function App() {
   const [products, setProducts] = useState([]);
@@ -17,14 +18,16 @@ function App() {
   }, []);
 
   return (
-    <Router>
-      <NavBar />
-      <Routes>
-        <Route path="/" element={<Products productsList={products} />} />
-        <Route path="/products/:index" element={<ProductDetailsWrapper products={products} />} />
-        <Route path='/cart' element={<Cart/>} />
-      </Routes>
-    </Router>
+    <CartProvider>
+      <Router>
+        <NavBar />
+        <Routes>
+          <Route path="/" element={<Products productsList={products} />} />
+          <Route path="/products/:index" element={<ProductDetailsWrapper products={products} />} />
+          <Route path='/cart' element={<Cart/>} />
+        </Routes>
+      </Router>
+    </CartProvider>
   );
 }
 

@@ -1,26 +1,24 @@
-import React, { useState } from "react";
-import { BsFillCartFill } from "react-icons/bs";
+import React from 'react';
+import { useCart } from '../CartContext';
 
-function Cart () {
-    const [cartItems, setCartItems] = useState([]);
+const Cart = () => {
+  const { items, dispatch } = useCart(); // Updated to use 'items' instead of 'state'
 
-    return (
-        <div className="container d-flex justify-content-center mt-5" style={{maxHeight:"100em", backgroundColor:"white"}}>
-            <div className="card" >
-                            {/* <h2>Shopping Cart</h2> */}
-                {cartItems.length === 0 ? (
-                <p>Your cart is empty!</p>
-                ) : (
-                <ul>
-                    {cartItems.map((item, index) => (
-                    <li key={index}>{item.title}</li>
-                    ))}
-                </ul>
-                )}
-                <button style={{backgroundColor:"orange"}}>START SHOPPING</button>
-            </div>
+  const removeFromCart = (product) => {
+    dispatch({ type: 'REMOVE_FROM_CART', payload: product });
+  };
+
+  return (
+    <div>
+      <h2>Cart</h2>
+      {items.map((item) => (
+        <div key={item.id}>
+          <p>{item.name}</p>
+          <button onClick={() => removeFromCart(item)}>Remove from Cart</button>
         </div>
-    );
-}
+      ))}
+    </div>
+  );
+};
 
 export default Cart;
