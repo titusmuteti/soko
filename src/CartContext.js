@@ -1,19 +1,17 @@
 import React, { createContext, useReducer, useContext } from 'react';
 
-// Define your initial state and reducer function
 const initialState = {
-  items: [], // Initialize the 'items' property as an empty array
+  items: [],
 };
 
-// Define your reducer function to handle cart actions
 const cartReducer = (state, action) => {
   switch (action.type) {
     case 'ADD_TO_CART':
-      return { ...state, items: [...state.items, action.payload] }; // Corrected property name
+      return { ...state, items: [...state.items, action.payload] }; 
     case 'REMOVE_FROM_CART':
-      // Implement logic to remove an item from the cart
-      const updatedCart = state.items.filter(item => item.id !== action.payload.id); // Corrected property name
-      return { ...state, items: updatedCart }; // Corrected property name
+      // logic to remove an item from the cart
+      const updatedCart = state.items.filter(item => item.id !== action.payload.id); 
+      return { ...state, items: updatedCart }; 
     default:
       return state;
   }
@@ -36,5 +34,6 @@ export const useCart = () => {
   if (!context) {
     throw new Error('useCart must be used within a CartProvider');
   }
+  console.log(context);
   return context;
 };

@@ -7,7 +7,7 @@ import ProductSpecification from './ProductSpecifications';
 import Rating from './Rating';
 import { useCart } from '../CartContext';
 
-function ProductDescription({ product }) {
+function ProductDetail({ product }) {
   const [showModal, setShowModal] = useState(false);
   const [isInCart, setIsInCart] = useState(false);
   const [cartItems, setCartItems] = useState(0);
@@ -125,4 +125,4 @@ function ProductDescription({ product }) {
   );
 }
 
-export default ProductDescription;
+export default ProductDetail;
