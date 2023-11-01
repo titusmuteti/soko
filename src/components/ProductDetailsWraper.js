@@ -1,6 +1,6 @@
 import React from "react";
 import { useParams } from 'react-router-dom';
-import ProductDescription from './ProductDescription';
+import ProductDetails from './ProductDetails';
 
 function ProductDetailsWrapper({ products }) {
     const { index } = useParams();
@@ -17,7 +17,7 @@ function ProductDetailsWrapper({ products }) {
   
     const product = products[productIndex];
   
-    return <ProductDescription product={product} />;
+    return <ProductDetails product={product} />;
   }
 
   export default ProductDetailsWrapper;
