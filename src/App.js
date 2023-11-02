@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import { Provider } from 'react-redux';
-import store from './redux/store';
 
 import NavBar from './components/NavBar';
 import Products from './components/Products';
@@ -19,16 +17,14 @@ function App() {
   }, []);
 
   return (
-    <Provider store={store} >
-      <Router>
-        <NavBar />
-        <Routes>
-          <Route path="/" element={<Products productsList={products} />} />
-          <Route path="/products/:index" element={<ProductDetailsWrapper products={products} />} />
-          <Route path='/cart' element={<Cart/>} />
-        </Routes>
-      </Router>
-    </Provider>
+    <Router>
+      <NavBar />
+      <Routes>
+        <Route path="/" element={<Products productsList={products} />} />
+        <Route path="/products/:index" element={<ProductDetailsWrapper products={products} />} />
+        <Route path='/cart' element={<Cart/>} />
+      </Routes>
+    </Router>
   );
 }
 
