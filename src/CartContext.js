@@ -1,4 +1,4 @@
-import React, { createContext, useReducer, useContext } from 'react';
+import React, { createContext, useReducer, useContext, useEffect } from 'react';
 
 const initialState = {
   items: [],
@@ -7,11 +7,12 @@ const initialState = {
 const cartReducer = (state, action) => {
   switch (action.type) {
     case 'ADD_TO_CART':
-      return { ...state, items: [...state.items, action.payload] }; 
+      return { ...state, items: [...state.items, action.payload] };
     case 'REMOVE_FROM_CART':
-      // logic to remove an item from the cart
-      const updatedCart = state.items.filter(item => item.id !== action.payload.id); 
-      return { ...state, items: updatedCart }; 
+      const updatedCart = state.items.filter(item => item.id !== action.payload.id);
+      return { ...state, items: updatedCart };
+    case 'SET_CART':
+      return { ...state, items: action.payload }; // Add this case to set the cart
     default:
       return state;
   }
@@ -22,8 +23,24 @@ const CartContext = createContext();
 export const CartProvider = ({ children }) => {
   const [state, dispatch] = useReducer(cartReducer, initialState);
 
+  useEffect(() => {
+    try {
+      const savedCartItems = localStorage.getItem('cartItems');
+      if (savedCartItems) {
+        const items = JSON.parse(savedCartItems);
+        dispatch({ type: 'SET_CART', payload: items });
+      }
+    } catch (error) {
+      console.error('Error parsing cart items from localStorage:', error);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('cartItems', JSON.stringify(state.items));
+  }, [state.items]);
+
   return (
-    <CartContext.Provider value={{ items: state.items, dispatch }}> 
+    <CartContext.Provider value={{ items: state.items, dispatch }}>
       {children}
     </CartContext.Provider>
   );
@@ -34,6 +51,5 @@ export const useCart = () => {
   if (!context) {
     throw new Error('useCart must be used within a CartProvider');
   }
-  console.log(context);
   return context;
 };

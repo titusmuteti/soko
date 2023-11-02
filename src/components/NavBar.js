@@ -35,8 +35,12 @@ function NavBar() {
 
             <Nav.Link href="/cart" style={{ marginLeft: '2em' }}>
               <BsFillCartFill style={{ fontSize: "30px" }} /> Cart{' '}
-              {items.length > 0 && <span className="badge bg-primary">{items.length}</span>}
-            </Nav.Link>
+              {items.length > 0 && (
+                <span className="badge bg-primary">
+                  {items.reduce((total, item) => total + item.quantity, 0)}
+                </span>
+              )}
+          </Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>
