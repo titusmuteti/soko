@@ -3,7 +3,7 @@ import { BsFillCartFill } from 'react-icons/bs';
 import { Modal, Button, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { addToCart, removeFromCart, increaseQuantity } from '../redux/cartActions';
+import { addToCart, removeFromCart, increaseQuantity, decreaseQuantity } from '../redux/cartActions';
 
 import DeliveryInfo from './DeliveryInfo';
 import ProductSpecification from './ProductSpecifications';
@@ -25,16 +25,22 @@ function ProductDetail({ product }) {
     }
   }
 
-  function handleRemoveFromCart() {
-    if (isInCart) {
-      dispatch(removeFromCart(product.id));
-    }
-  }
 
   function handleIncreaseQuantity() {
     dispatch(increaseQuantity(product.id));
   }
 
+  function handleDecreaseQuantity() {
+    const productInCart = cartItems.find((item) => item.id === product.id);
+
+    if (productInCart && productInCart.quantity > 1) {
+      dispatch(decreaseQuantity(product.id));
+    } else {
+      // If quantity is 1 or less, remove the product from the cart
+      dispatch(removeFromCart(product.id));
+    }
+  }
+  
   return (
     <>
       <div className="container d-flex justify-content-center mt-5">
@@ -58,12 +64,12 @@ function ProductDetail({ product }) {
                 <Rating product={product} />
                 {isInCart ? (
                   <div className="d-flex justify-content-between align-items-center m-4" style={{ width: '20em' }}>
-                    <button className="btn btn-primary" onClick={handleRemoveFromCart}>
+                    <button className="btn btn-primary" onClick={handleDecreaseQuantity}>
                       -
                     </button>
                     <span>{cartItems.find((item) => item.id === product.id).quantity}</span>
                     <button className="btn btn-primary" onClick={handleIncreaseQuantity}>
-                      + {/* Change the button to trigger increaseQuantity */}
+                      +
                     </button>
                     <small className="d-inline">({cartItems.find((item) => item.id === product.id).quantity} item(s) added to cart)</small>
                   </div>

@@ -21,8 +21,19 @@ const initialState = {
             item.id === action.payload ? { ...item, quantity: item.quantity + 1 } : item
           ),
         };
-      default:
-        return state;
+        case 'DECREASE_QUANTITY':
+            return {
+              ...state,
+              items: state.items.map((item) => {
+                if (item.id === action.payload && item.quantity > 1) {
+                  return { ...item, quantity: item.quantity - 1 };
+                }
+                return item;
+              }),
+            };
+      
+          default:
+            return state;
     }
   };
   

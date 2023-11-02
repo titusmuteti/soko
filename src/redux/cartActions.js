@@ -18,4 +18,11 @@ export const addToCart = (product) => {
       payload: productId,
     };
   };
+
+  export const decreaseQuantity = (productId) => {
+    return {
+        type: 'DECREASE_QUANTITY',
+        payload: productId,
+    }
+  }
   
