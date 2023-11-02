@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux'; 
 import { removeFromCart } from '../redux/cartActions'; 
+import { RiDeleteBin6Line } from 'react-icons/ri';
 
 const Cart = () => {
   const cartItems = useSelector((state) => state.cart.items);
@@ -17,9 +18,17 @@ const Cart = () => {
       <div className='card'>
         {cartItems.length > 0 ? (
           cartItems.map((item) => (
-            <div key={item.id}>
+            <div className='container' key={item.id}>
+              <div className='card' style={{ maxWidth: '500px', maxHeight: '100%' }}>
+              <img
+                src={item.image}
+                alt="..."
+                className="img-fluid"
+                style={{height: '100%'}}
+              />
               <p>{item.title}</p>
-              <button onClick={() => handleRemoveFromCart(item.id)}>Remove from Cart</button>
+              <button onClick={() => handleRemoveFromCart(item.id)} style={{width:"100px"}} >{<RiDeleteBin6Line />}</button>
+              </div>
             </div>
           ))
         ) : (
