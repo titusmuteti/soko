@@ -8,6 +8,7 @@ import { addToCart, removeFromCart, increaseQuantity, decreaseQuantity } from '.
 import DeliveryInfo from './DeliveryInfo';
 import ProductSpecification from './ProductSpecifications';
 import Rating from './Rating';
+import './cart.css'
 
 function ProductDetail({ product }) {
   const [showModal, setShowModal] = useState(false);
@@ -24,6 +25,8 @@ function ProductDetail({ product }) {
     const item = {
       id: product.id,
       title: product.title,
+      image: product.image,
+      price: product.price,
       quantity: 1,
     };
 
@@ -60,7 +63,7 @@ function ProductDetail({ product }) {
                 <h3 className="card-title">{product.title}</h3>
 
                 <hr /> {/* Add a horizontal line below the title */}
-                <h3 className="fw-bold">KSh{product.price}</h3>
+                <h3 className="fw-bold" style={{ position: 'absolute', top: '10px', right: '10px' }}>KSh{product.price}</h3>
 
                 {/* Product Rating */}
                 <Rating product={product} />
