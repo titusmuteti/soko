@@ -25,4 +25,3 @@ export const addToCart = (product) => {
         payload: productId,
     }
   }
-  

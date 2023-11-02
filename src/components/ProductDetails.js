@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { BsFillCartFill } from 'react-icons/bs';
 import { Modal, Button, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -16,13 +16,20 @@ function ProductDetail({ product }) {
 
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.items);
-  const isInCart = cartItems.some((item) => item.id === product.id)
+
+  // Check if the product is in the cart
+  const isInCart = cartItems && cartItems.some((item) => item.id === product.id);  
 
   
   function handleAddToCart() {
-    if (!isInCart) {
-      dispatch(addToCart({ ...product, quantity: 1 }));
-    }
+    const item = {
+      id: product.id,
+      title: product.title,
+      quantity: 1,
+    };
+
+    console.log('Adding to cart:', item);
+    dispatch(addToCart(item));
   }
 
 

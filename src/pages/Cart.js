@@ -1,17 +1,25 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux'; 
+import { removeFromCart } from '../redux/cartActions'; 
 
-const Cart = ({items}) => {
+const Cart = () => {
+  const cartItems = useSelector((state) => state.cart.items);
+  const dispatch = useDispatch(); 
 
+  function handleRemoveFromCart (productId) {
+    // Dispatch the removeFromCart action with the product's ID
+    dispatch(removeFromCart(productId));
+  };
 
   return (
     <div className='container m-4' style={{ paddingInline: '50px', margin: 'auto' }}>
       <div className='card'>
-        {items.length > 0 ? (
-          items.map((item) => (
+        {cartItems.length > 0 ? (
+          cartItems.map((item) => (
             <div key={item.id}>
               <p>{item.title}</p>
-              <button>Remove from Cart</button>
+              <button onClick={() => handleRemoveFromCart(item.id)}>Remove from Cart</button>
             </div>
           ))
         ) : (
