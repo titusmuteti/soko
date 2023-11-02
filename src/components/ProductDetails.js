@@ -12,17 +12,20 @@ function ProductDetail({ product }) {
   const [isInCart, setIsInCart] = useState(false);
   const [cartItems, setCartItems] = useState(0);
 
-  const { dispatch, items } = useCart();
+  const { dispatch } = useCart();
 
   const handleClose = () => setShowModal(false);
   const handleShow = () => setShowModal(true);
 
   useEffect(() => {
-    // Calculate cart items count from the context
-    const itemCount = items.reduce((total, item) => total + item.quantity, 0);
-    setCartItems(itemCount);
-    setIsInCart(itemCount > 0);
-  }, [items]);
+    // When the component mounts, check if there are items in localStorage.
+    const savedCartItems = localStorage.getItem('cartItems');
+    if (savedCartItems) {
+      const itemCount = parseInt(savedCartItems, 10);
+      setCartItems(itemCount);
+      setIsInCart(itemCount > 0);
+    }
+  }, []);
 
   function handleAddToCart() {
     const item = { // Construct the 'item' object
@@ -42,12 +45,13 @@ function ProductDetail({ product }) {
   }
 
   function handleRemoveFromCart() {
-    const existingItem = items.find(item => item.id === product.id);
+    if (cartItems > 0) {
+      const updatedCartItems = cartItems - 1;
+      setCartItems(updatedCartItems);
+      setIsInCart(updatedCartItems > 0);
 
-    if (existingItem && existingItem.quantity > 1) {
-      dispatch({ type: 'REMOVE_FROM_CART', payload: { id: product.id } });
-    } else {
-      dispatch({ type: 'REMOVE_FROM_CART', payload: { id: product.id } });
+      // Update localStorage with the new cart items count.
+      localStorage.setItem('cartItems', updatedCartItems);
     }
   }
 
