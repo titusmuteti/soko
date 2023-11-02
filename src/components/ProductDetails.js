@@ -30,7 +30,6 @@ function ProductDetail({ product }) {
       quantity: 1,
     };
 
-    console.log('Adding to cart:', item);
     dispatch(addToCart(item));
   }
 

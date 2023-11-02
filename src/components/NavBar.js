@@ -5,8 +5,12 @@ import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { BsFillCartFill } from "react-icons/bs";
+import { useSelector } from 'react-redux'; 
+import { Link } from 'react-router-dom';
 
 function NavBar() {
+  const cartItems = useSelector((state) => state.cart.items);
+  const cartItemCount = cartItems.reduce((total, item) => total + item.quantity, 0);
 
   return (
     <Navbar expand="lg" className="bg-white" style={{ marginTop: '50px' }}>
@@ -31,9 +35,28 @@ function NavBar() {
           >
             <Nav.Link href="#" style={{ marginLeft: '2em' }}>Help</Nav.Link>
 
-            <Nav.Link href="/cart" style={{ marginLeft: '2em' }}>
-              <BsFillCartFill style={{ fontSize: "30px" }} /> 
-            </Nav.Link>
+            <Link to="/cart" style={{ marginLeft: '2em', position: "relative" }}>
+              <div style={{ display: "inline-block", margin:"5px" }}>
+                <BsFillCartFill style={{ fontSize: "30px", color: "black"}} />
+                {cartItemCount > 0 && (
+                  <span
+                    className="cart-notification"
+                    style={{
+                      backgroundColor: "orange",
+                      color: "white",
+                      borderRadius: "30%",
+                      padding: "4px",
+                      fontSize: "12px",
+                      position: "absolute",
+                      top: "-5px",
+                      right: "0px",
+                    }}
+                  >
+                    {cartItemCount}
+                  </span>
+                )}
+              </div>
+            </Link>
           </Nav>
         </Navbar.Collapse>
       </Container>
