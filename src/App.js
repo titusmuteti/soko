@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import store from './redux/store';
 
 import NavBar from './components/NavBar';
 import Products from './components/Products';
 import ProductDetailsWrapper from './components/ProductDetailsWraper';
 import Cart from './pages/Cart';
 import './app.css';
-import { CartProvider } from './CartContext';
 
 function App() {
   const [products, setProducts] = useState([]);
@@ -18,7 +19,7 @@ function App() {
   }, []);
 
   return (
-    <CartProvider>
+    <Provider store={store} >
       <Router>
         <NavBar />
         <Routes>
@@ -27,7 +28,7 @@ function App() {
           <Route path='/cart' element={<Cart/>} />
         </Routes>
       </Router>
-    </CartProvider>
+    </Provider>
   );
 }
 

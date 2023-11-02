@@ -5,10 +5,8 @@ import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { BsFillCartFill } from "react-icons/bs";
-import { useCart } from '../CartContext'; // Import the useCart hook
 
 function NavBar() {
-  const { items } = useCart(); // Access the cart items from the context
 
   return (
     <Navbar expand="lg" className="bg-white" style={{ marginTop: '50px' }}>
@@ -34,8 +32,7 @@ function NavBar() {
             <Nav.Link href="#" style={{ marginLeft: '2em' }}>Help</Nav.Link>
 
             <Nav.Link href="/cart" style={{ marginLeft: '2em' }}>
-              <BsFillCartFill style={{ fontSize: "30px" }} /> Cart{' '}
-              {items.length > 0 && <span className="badge bg-primary">{items.length}</span>}
+              <BsFillCartFill style={{ fontSize: "30px" }} /> 
             </Nav.Link>
           </Nav>
         </Navbar.Collapse>

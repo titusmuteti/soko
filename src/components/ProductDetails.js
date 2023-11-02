@@ -2,57 +2,37 @@ import React, { useState, useEffect } from 'react';
 import { BsFillCartFill } from 'react-icons/bs';
 import { Modal, Button, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { addToCart, removeFromCart, increaseQuantity } from '../redux/cartActions';
+
 import DeliveryInfo from './DeliveryInfo';
 import ProductSpecification from './ProductSpecifications';
 import Rating from './Rating';
-import { useCart } from '../CartContext';
 
 function ProductDetail({ product }) {
   const [showModal, setShowModal] = useState(false);
-  const [isInCart, setIsInCart] = useState(false);
-  const [cartItems, setCartItems] = useState(0);
-
-  const { dispatch } = useCart();
-
   const handleClose = () => setShowModal(false);
   const handleShow = () => setShowModal(true);
 
-  useEffect(() => {
-    // When the component mounts, check if there are items in localStorage.
-    const savedCartItems = localStorage.getItem('cartItems');
-    if (savedCartItems) {
-      const itemCount = parseInt(savedCartItems, 10);
-      setCartItems(itemCount);
-      setIsInCart(itemCount > 0);
-    }
-  }, []);
+  const dispatch = useDispatch();
+  const cartItems = useSelector((state) => state.items);
+  const isInCart = cartItems.some((item) => item.id === product.id)
 
+  
   function handleAddToCart() {
-    const item = { // Construct the 'item' object
-      id: product.id,
-      title: product.title,
-      quantity: 1,
-    };
-    
-    dispatch({ type: 'ADD_TO_CART', payload: item });
-    
-    const updatedCartItems = cartItems + 1;
-    setCartItems(updatedCartItems);
-    setIsInCart(updatedCartItems > 0);
-
-    // Update localStorage with the new cart items count.
-    localStorage.setItem('cartItems', updatedCartItems);
+    if (!isInCart) {
+      dispatch(addToCart({ ...product, quantity: 1 }));
+    }
   }
 
   function handleRemoveFromCart() {
-    if (cartItems > 0) {
-      const updatedCartItems = cartItems - 1;
-      setCartItems(updatedCartItems);
-      setIsInCart(updatedCartItems > 0);
-
-      // Update localStorage with the new cart items count.
-      localStorage.setItem('cartItems', updatedCartItems);
+    if (isInCart) {
+      dispatch(removeFromCart(product.id));
     }
+  }
+
+  function handleIncreaseQuantity() {
+    dispatch(increaseQuantity(product.id));
   }
 
   return (
@@ -76,23 +56,22 @@ function ProductDetail({ product }) {
 
                 {/* Product Rating */}
                 <Rating product={product} />
-
                 {isInCart ? (
                   <div className="d-flex justify-content-between align-items-center m-4" style={{ width: '20em' }}>
-                    <Button className="btn btn-primary" onClick={handleRemoveFromCart}>
+                    <button className="btn btn-primary" onClick={handleRemoveFromCart}>
                       -
-                    </Button>
-                    <span>{cartItems}</span>
-                    <Button className="btn btn-primary" onClick={handleAddToCart}>
-                      +
-                    </Button>
-                    <small className="d-inline">({cartItems} item(s) added to cart)</small>
+                    </button>
+                    <span>{cartItems.find((item) => item.id === product.id).quantity}</span>
+                    <button className="btn btn-primary" onClick={handleIncreaseQuantity}>
+                      + {/* Change the button to trigger increaseQuantity */}
+                    </button>
+                    <small className="d-inline">({cartItems.find((item) => item.id === product.id).quantity} item(s) added to cart)</small>
                   </div>
                 ) : (
                   <div className="d-flex justify-content-between align-items-center">
-                    <Button className="btn btn-primary m-4" style={{ width: '100%' }} onClick={handleAddToCart}>
+                    <button className="btn btn-primary m-4" style={{ width: '100%' }} onClick={handleAddToCart}>
                       <span className="me-1"><BsFillCartFill /></span>Add to Cart
-                    </Button>
+                    </button>
                   </div>
                 )}
               </div>
