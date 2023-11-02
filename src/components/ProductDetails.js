@@ -15,12 +15,11 @@ function ProductDetail({ product }) {
   const handleShow = () => setShowModal(true);
 
   const dispatch = useDispatch();
-  const cartItems = useSelector((state) => state.items);
+  const cartItems = useSelector((state) => state.cart.items);
 
   // Check if the product is in the cart
-  const isInCart = cartItems && cartItems.some((item) => item.id === product.id);  
+  const productInCart = cartItems.find((item) => item.id === product.id);
 
-  
   function handleAddToCart() {
     const item = {
       id: product.id,
@@ -32,18 +31,14 @@ function ProductDetail({ product }) {
     dispatch(addToCart(item));
   }
 
-
   function handleIncreaseQuantity() {
     dispatch(increaseQuantity(product.id));
   }
 
   function handleDecreaseQuantity() {
-    const productInCart = cartItems.find((item) => item.id === product.id);
-
     if (productInCart && productInCart.quantity > 1) {
       dispatch(decreaseQuantity(product.id));
     } else {
-      // If quantity is 1 or less, remove the product from the cart
       dispatch(removeFromCart(product.id));
     }
   }
@@ -69,16 +64,16 @@ function ProductDetail({ product }) {
 
                 {/* Product Rating */}
                 <Rating product={product} />
-                {isInCart ? (
+                {productInCart ? (
                   <div className="d-flex justify-content-between align-items-center m-4" style={{ width: '20em' }}>
                     <button className="btn btn-primary" onClick={handleDecreaseQuantity}>
                       -
                     </button>
-                    <span>{cartItems.find((item) => item.id === product.id).quantity}</span>
+                    <span>{productInCart.quantity}</span>
                     <button className="btn btn-primary" onClick={handleIncreaseQuantity}>
                       +
                     </button>
-                    <small className="d-inline">({cartItems.find((item) => item.id === product.id).quantity} item(s) added to cart)</small>
+                    <small className="d-inline">({productInCart.quantity} item(s) added to cart)</small>
                   </div>
                 ) : (
                   <div className="d-flex justify-content-between align-items-center">
