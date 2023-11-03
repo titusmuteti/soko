@@ -1,28 +1,40 @@
-import React from "react";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import ProductCard from "./ProductCard";
+import './product.css';
 
-function Products ({ productsList }) {
-    const displayProducts = productsList.map((product, index) => (
-        <div className="col-md-2 mt-0 mb-0" key={index}>
-            <ProductCard product={product} index={index} />
-        </div>
-    ));
+function Products({ productsList }) {
+  const categories = [...new Set(productsList.map((product) => product.category))];
+  const [showAll, setShowAll] = useState(false);
 
-    const sectionStyle = {
-        backgroundColor: "white",
-        maxWidth: "75em",
-        margin: "0 auto",
-        padding: "25px",
-        marginTop: "2em",
-    };
+  return (
+    <section className="sectionStyle">
+      {categories.map((category) => {
+        const categoryProducts = productsList
+          .filter((product) => product.category === category)
+          .slice(0, showAll ? undefined : 5);
 
-    return (
-        <section style={sectionStyle}>
-            <article className='row'>
-                {displayProducts}
-            </article>
-        </section>
-    );
+        return (
+          <div key={category} className="category">
+            <h4 className="categoryHeading">
+              {category}
+              <Link to={`/products/${category}`}>
+                <button className="showMoreButton">See All</button>
+              </Link>
+            </h4>
+            <div className="productCardContainer">
+              {categoryProducts.map((product, index) => (
+                <div key={index} className="productCard">
+                  <ProductCard product={product} index={index} />
+                </div>
+              ))}
+            </div>
+            <hr />
+          </div>
+        );
+      })}
+    </section>
+  );
 }
 
 export default Products;

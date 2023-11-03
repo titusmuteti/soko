@@ -50,9 +50,11 @@ const Cart = () => {
                         width: "200px",
                         border: "none", 
                         background: "transparent",
-                        display: "flex",
+                        // display: "flex",
                         alignItems: "center",
-                        paddingTop: "25px"
+                        paddingTop: "25px",
+                        position:"relative",
+                        left: "100px"
                       }}>
                       <RiDeleteBin6Line className='fs-5' style={{ color: 'orange' }} /> REMOVE
                     </button>

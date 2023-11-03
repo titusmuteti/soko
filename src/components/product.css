@@ -1,0 +1,45 @@
+.sectionStyle {
+  background-color: white;
+  max-width: 75em;
+  margin: 0 auto;
+  padding: 10px;
+  margin-top: 2em;
+}
+
+.categoryHeading {
+  font-size: 20px;
+  color: darkblue;
+  border-bottom: 3px solid darkblue;
+  padding-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: bold;
+}
+
+.productCard {
+  width: 200px;
+  margin: 0;
+  padding: 0px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+button {
+  background-color: transparent;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  cursor: pointer;
+  float: right;
+}
+
+.productCardContainer {
+  display: flex;
+  flex-wrap: wrap;
+  max-height: 280px;
+  gap: 10px;
+}
+
+.category {
+  margin-bottom: 20px;
+}
