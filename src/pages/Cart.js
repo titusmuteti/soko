@@ -10,6 +10,9 @@ const Cart = () => {
   const cartItems = useSelector((state) => state.cart.items);
   const dispatch = useDispatch();
 
+  //calculating subtotal
+  const subtotal = cartItems.reduce((total, item) => total + item.quantity * item.price, 0).toFixed(2);
+
   function handleRemoveFromCart(productId) {
     dispatch(removeFromCart(productId));
   }
@@ -88,7 +91,7 @@ const Cart = () => {
 
     {cartItems.length > 0 && (
           <Col md={4} className="mt-4 ml-auto" style={{ marginLeft: '40px', width: '18%', position:"absolute", top:100, left:1350 }}>
-            <CartSummary />
+            <CartSummary subtotal={subtotal}/>
           </Col>
         )}
     </>

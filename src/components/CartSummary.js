@@ -1,19 +1,20 @@
 import React from "react";
-import Form from 'react-bootstrap/Form';
 
-function CartSummary() {
-    return (
-        <div className="card">
-          <div className="card-body">
-            <p className="card-title">CART SUMMARY</p>
-            <small>Delivery fee not included</small>
-            <hr/>
-            <p className="card-text">Subtotal</p>
-            <hr />
-            <button style={{ marginTop: '20px' }}>CHECKOUT</button>
-          </div>
-        </div>
-    );
+function CartSummary({ subtotal }) {
+  return (
+    <div className="card border-primary mb-3">
+      <div className="card-header bg-primary text-white">
+        <h5 className="card-title">CART SUMMARY</h5>
+      </div>
+      <div className="card-body">
+        <small className="card-text">Delivery fee not included</small>
+        <hr />
+        <small className="card-text">Subtotal: <span className="fs-4" style={{marginLeft:"80px"}}>KSh{subtotal}</span></small>
+        <hr />
+        <button className="btn btn-success w-100">CHECKOUT (KSH{subtotal})</button>
+      </div>
+    </div>
+  );
 }
 
 export default CartSummary;
