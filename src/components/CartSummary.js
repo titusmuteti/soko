@@ -11,7 +11,7 @@ function CartSummary({ subtotal }) {
         <hr />
         <small className="card-text">Subtotal: <span className="fs-4" style={{marginLeft:"80px"}}>KSh{subtotal}</span></small>
         <hr />
-        <button className="btn btn-success w-100">CHECKOUT (KSH{subtotal})</button>
+        <button className="btn btn-success w-100">CHECKOUT <small>(KSH{subtotal})</small></button>
       </div>
     </div>
   );
