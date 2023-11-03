@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { removeFromCart, increaseQuantity, decreaseQuantity } from '../redux/cartActions';
 import { RiDeleteBin6Line } from 'react-icons/ri';
+import { Col } from 'react-bootstrap';
+import CartSummary from '../components/CartSummary';
 
 const Cart = () => {
   const cartItems = useSelector((state) => state.cart.items);
@@ -21,6 +23,7 @@ const Cart = () => {
   }
 
   return (
+    <>
     <div className="container col-m-4 d-flex justify-content-center align-items-center p-4" style={{ backgroundColor: "white", maxWidth:"800px", marginTop:"20px" }}>
       <div className='col-m-12'>
         {cartItems.length > 0 ? (
@@ -78,8 +81,17 @@ const Cart = () => {
             </button>
           </div>
         )}
+        
       </div>
     </div>
+    {/* creating a separate component on the right side  */}
+
+    {cartItems.length > 0 && (
+          <Col md={4} className="mt-4 ml-auto" style={{ marginLeft: '40px', width: '18%', position:"absolute", top:100, left:1350 }}>
+            <CartSummary />
+          </Col>
+        )}
+    </>
   );
 };
 
