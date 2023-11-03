@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify'; // Import ToastContainer
+import 'react-toastify/dist/ReactToastify.css'; // Import the CSS for react-toastify
 
 import NavBar from './components/NavBar';
 import Products from './components/Products';
@@ -26,9 +28,9 @@ function App() {
         <Route path='/cart' element={<Cart/>} />
         <Route path='/products/:category' element={<CategoryProducts products={products} />} />
       </Routes>
+      <ToastContainer autoClose={1000} className="centered-notification" />
     </Router>
   );
 }
-
 
 export default App;
