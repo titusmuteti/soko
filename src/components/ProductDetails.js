@@ -62,7 +62,7 @@ function ProductDetail({ product }) {
                 <h3 className="card-title">{product.title}</h3>
 
                 <hr /> {/* Add a horizontal line below the title */}
-                <h3 className="fw-bold" style={{ position: 'absolute', top: '10px', right: '10px' }}>KSh{product.price}</h3>
+                <h4 className="fw-bold" >KSh{product.price}</h4>
 
                 {/* Product Rating */}
                 <Rating product={product} />
