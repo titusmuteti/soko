@@ -19,9 +19,10 @@
 .productCard {
   width: 200px;
   margin: 0;
-  padding: 0px;
+  padding: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
+  max-height: 350px;
 }
 
 button {
@@ -36,8 +37,13 @@ button {
 .productCardContainer {
   display: flex;
   flex-wrap: wrap;
-  max-height: 280px;
-  gap: 10px;
+  max-height: none; 
+  gap: 20px;
+  transition: max-height 0.3s ease; 
+}
+
+.productCardContainer.expanded {
+  max-height: none; 
 }
 
 .category {
