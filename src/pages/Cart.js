@@ -5,6 +5,7 @@ import { removeFromCart, increaseQuantity, decreaseQuantity } from '../redux/car
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { Col } from 'react-bootstrap';
 import CartSummary from '../components/CartSummary';
+import soko from '../assests/images/soko.png';
 
 const Cart = () => {
   const cartItems = useSelector((state) => state.cart.items);
@@ -88,9 +89,10 @@ const Cart = () => {
           </div>
         ) : (
           <div className="text-center">
+            <img src={soko} alt='soko logo' style={{height:"190px", width:"200px", marginBottom:"50px"}}/>
             <p>Your cart is empty!</p>
-            <button>
-              <Link to="/">START SHOPPING</Link>
+            <button style={{marginRight:"20px", backgroundColor:"orangered"}}>
+              <Link to="/" style={{textDecoration:"none", color:"white"}}>START SHOPPING</Link>
             </button>
           </div>
         )}
