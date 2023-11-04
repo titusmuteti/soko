@@ -10,6 +10,10 @@ const Cart = () => {
   const cartItems = useSelector((state) => state.cart.items);
   const dispatch = useDispatch();
 
+
+  const cartItemCount = cartItems.reduce((total, item) => total + item.quantity, 0);
+
+
   //calculating subtotal
   const subtotal = cartItems.reduce((total, item) => total + item.quantity * item.price, 0).toFixed(2);
 
@@ -29,6 +33,10 @@ const Cart = () => {
     <>
     <div className="container col-m-4 d-flex justify-content-center align-items-center p-4" style={{ backgroundColor: "white", maxWidth:"800px", marginTop:"20px" }}>
       <div className='col-m-12'>
+        {cartItems.length > 0 && (
+              <h5>Cart ({cartItemCount})</h5> 
+        )} 
+        <hr/>
         {cartItems.length > 0 ? (
           <div className="cart-items-container">
             {cartItems.map((item) => (

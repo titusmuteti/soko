@@ -1,6 +1,8 @@
 import React from "react";
+import { useSelector } from 'react-redux';
 
 function Payment() {
+    const customAddressData = useSelector((state) => state.selectedLocation);
 
     const generateLabel = (number) => {
     return (
