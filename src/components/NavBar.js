@@ -7,6 +7,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import { BsFillCartFill } from "react-icons/bs";
 import { useSelector } from 'react-redux'; 
 import { Link } from 'react-router-dom';
+import soko from '../assests/images/soko.png';
 
 function NavBar() {
   const cartItems = useSelector((state) => state.cart.items);
@@ -15,7 +16,7 @@ function NavBar() {
   return (
     <Navbar expand="lg" className="bg-white" style={{ marginTop: '50px' }}>
       <Container>
-        <Navbar.Brand href="/" style={{ fontWeight: 'bold' }}>SOKO</Navbar.Brand>
+        <Navbar.Brand href="/" style={{ fontWeight: 'bold' }}>SOKO <img src={soko} style={{height:"10px"}}/> </Navbar.Brand>
         <Navbar.Toggle aria-controls="navbarScroll" />
 
         <Form className="d-flex pl-4" style={{ width: '50em', marginLeft: '5em' }}>
