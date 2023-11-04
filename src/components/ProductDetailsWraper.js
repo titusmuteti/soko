@@ -3,21 +3,21 @@ import { useParams } from 'react-router-dom';
 import ProductDetails from './ProductDetails';
 
 function ProductDetailsWrapper({ products }) {
-    const { index } = useParams();
-  
-    if (!products || products.length === 0) {   
-      return <div>Loading...</div>;
-    }
-  
-    const productIndex = parseInt(index, 10);
-  
-    if (isNaN(productIndex) || productIndex < 0 || productIndex >= products.length) {
-      return <div>Product not found</div>;
-    }
-  
-    const product = products[productIndex];
-  
-    return <ProductDetails product={product} />;
+  const { id } = useParams(); 
+  console.log("ID from URL:", id);
+  console.log("Products from API:", products);
+
+  if (!products || products.length === 0) {   
+    return <div>Loading...</div>;
   }
 
-  export default ProductDetailsWrapper;
+  const product = products.find(product => product.id === parseInt(id, 10));
+
+  if (!product) {
+    return <div>Product not found</div>;
+  }
+
+  return <ProductDetails product={product} />;
+}
+
+export default ProductDetailsWrapper;

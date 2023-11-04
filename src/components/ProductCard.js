@@ -14,7 +14,7 @@ function ProductCard({ product, index }) {
     const truncatedTitle = truncateText(product.title, 3);
 
     return (
-        <Link to={`/products/${index}`} style={{ textDecoration: 'none' }}>
+        <Link to={`/products/${product.id}`} style={{ textDecoration: 'none' }}>
             <Card style={{ width: '12rem', height: '70%' }}>
                 <Card.Img variant="top" src={product.image} style={{ height: '70%' }} />
                 <Card.Body>

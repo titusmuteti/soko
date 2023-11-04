@@ -6,7 +6,6 @@ import 'react-toastify/dist/ReactToastify.css'; // Import the CSS for react-toas
 import NavBar from './components/NavBar';
 import Products from './components/Products';
 import ProductDetailsWrapper from './components/ProductDetailsWraper';
-import CategoryProducts from './pages/CategoryProducts';
 import Cart from './pages/Cart';
 import './app.css';
 
@@ -24,9 +23,8 @@ function App() {
       <NavBar />
       <Routes>
         <Route path="/" element={<Products productsList={products} />} />
-        <Route path="/products/:index" element={<ProductDetailsWrapper products={products} />} />
+        <Route path="/products/:id" element={<ProductDetailsWrapper products={products} />} />
         <Route path='/cart' element={<Cart/>} />
-        <Route path='/products/:category' element={<CategoryProducts products={products} />} />
       </Routes>
       <ToastContainer autoClose={1000} className="centered-notification" />
     </Router>
