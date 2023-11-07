@@ -7,12 +7,25 @@ import Navbar from 'react-bootstrap/Navbar';
 import { BsFillCartFill } from "react-icons/bs";
 import { BsPersonFill } from 'react-icons/bs';
 import { useSelector } from 'react-redux'; 
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import soko from '../assests/images/soko.png';
 
 function NavBar() {
   const cartItems = useSelector((state) => state.cart.items);
   const cartItemCount = cartItems.reduce((total, item) => total + item.quantity, 0);
+
+  // Get the current location
+  const location = useLocation();
+
+  // Define an array of route paths where you want to display the NavBar
+  const showNavBarOnRoutes = ['/cart', '/payment', '/'];
+
+  // Check if the current location is in the array
+  const shouldShowNavBar = showNavBarOnRoutes.includes(location.pathname);
+
+  if (!shouldShowNavBar) {
+    return null; // Don't render the NavBar on certain routes
+  }
 
   return (
     <Navbar expand="lg" className="bg-white" style={{ marginTop: '50px' }}>
