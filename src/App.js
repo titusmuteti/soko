@@ -8,6 +8,7 @@ import Products from './components/Products';
 import ProductDetailsWrapper from './components/ProductDetailsWraper';
 import Cart from './pages/Cart';
 import Payment from './pages/Payment';
+import Login from './pages/Login';
 import './app.css';
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
         <Route path="/products/:id" element={<ProductDetailsWrapper products={products} />} />
         <Route path='/cart' element={<Cart/>} />
         <Route path='/payment' element={<Payment/>} />
+        <Route path='/login' element={<Login/>} />
       </Routes>
       <ToastContainer autoClose={1000} className="centered-notification" />
     </Router>

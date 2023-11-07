@@ -14,7 +14,7 @@ function CartSummary({ subtotal }) {
           Subtotal: <span className="fs-4" style={{ marginLeft: "80px" }}>KSh{subtotal}</span>
         </small>
         <hr />
-        <Link to="/payment"> {/* Use Link to navigate to the Payment component */}
+        <Link to="/login">
           <button className="btn btn-success w-100">
             CHECKOUT <small>(KSH{subtotal})</small>
           </button>

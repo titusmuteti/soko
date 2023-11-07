@@ -5,6 +5,7 @@ import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { BsFillCartFill } from "react-icons/bs";
+import { BsPersonFill } from 'react-icons/bs';
 import { useSelector } from 'react-redux'; 
 import { Link } from 'react-router-dom';
 import soko from '../assests/images/soko.png';
@@ -35,6 +36,10 @@ function NavBar() {
             style={{ maxHeight: '100px' }}
           >
             <Nav.Link href="#" style={{ marginLeft: '2em' }}>Help</Nav.Link>
+
+            <Link to="/login" style={{ marginLeft: '2em', textDecoration:"none", color:"white", marginTop:"10px" }}> 
+              {<BsPersonFill style={{fontSize:"24px", marginRight:"6px"}} />}Account
+            </Link>
 
             <Link to="/cart" style={{ marginLeft: '2em', position: "relative" }}>
               <div style={{ display: "inline-block", margin:"5px" }}>
