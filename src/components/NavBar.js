@@ -18,7 +18,12 @@ function NavBar() {
   const location = useLocation();
 
   // Define an array of route paths where you want to display the NavBar
-  const showNavBarOnRoutes = ['/cart', '/payment', '/'];
+  const showNavBarOnRoutes = ['/cart', '/payment'];
+
+  // Include product detail routes like 'products/1', 'products/2', etc.
+  if (location.pathname.startsWith('/products/')) {
+    showNavBarOnRoutes.push(location.pathname);
+  }
 
   // Check if the current location is in the array
   const shouldShowNavBar = showNavBarOnRoutes.includes(location.pathname);
