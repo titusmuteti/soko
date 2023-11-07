@@ -50,9 +50,9 @@ function NavBar() {
           >
             <Nav.Link href="#" style={{ marginLeft: '2em' }}>Help</Nav.Link>
 
-            <Link to="/login" style={{ marginLeft: '2em', textDecoration:"none", color:"white", marginTop:"10px" }}> 
+            <Nav.Link href="/login" style={{ marginLeft: '2em'}}> 
               {<BsPersonFill style={{fontSize:"24px", marginRight:"6px"}} />}Account
-            </Link>
+            </Nav.Link>
 
             <Link to="/cart" style={{ marginLeft: '2em', position: "relative" }}>
               <div style={{ display: "inline-block", margin:"5px" }}>
