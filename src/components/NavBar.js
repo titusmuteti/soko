@@ -9,10 +9,12 @@ import { BsPersonFill } from 'react-icons/bs';
 import { useSelector } from 'react-redux'; 
 import { Link, useLocation } from 'react-router-dom';
 import soko from '../assests/images/soko.png';
+import Dropdown from 'react-bootstrap/Dropdown';
 
 function NavBar() {
   const cartItems = useSelector((state) => state.cart.items);
   const cartItemCount = cartItems.reduce((total, item) => total + item.quantity, 0);
+  const firstname = localStorage.getItem('firstname'); // Retrieve the stored first name
 
   // Get the current location
   const location = useLocation();
@@ -32,12 +34,17 @@ function NavBar() {
     return null; // Don't render the NavBar on certain routes
   }
 
+  function handleLogout(){
+    localStorage.removeItem('firstname');
+    
+    window.location.href = '/';
+
+  }
+
   return (
     <Navbar expand="lg" className="bg-white" style={{ marginTop: '50px' }}>
       <Container>
-        <Navbar.Brand href="/" style={{ fontWeight: 'bold' }}>SOKO <img src={soko} style={{height:"10px"}}/> </Navbar.Brand>
-        <Navbar.Toggle aria-controls="navbarScroll" />
-
+        <Navbar.Brand href="/" style={{ fontWeight: 'bold' }}>SOKO <img src={soko} style={{ height: "10px" }} /> </Navbar.Brand>
         <Form className="d-flex pl-4" style={{ width: '50em', marginLeft: '5em' }}>
           <Form.Control
             type="search"
@@ -49,19 +56,30 @@ function NavBar() {
         </Form>
 
         <Navbar.Collapse id="navbarScroll">
-          <Nav
-            className="me-auto my-2 my-lg-0"
-            style={{ maxHeight: '100px' }}
-          >
-            <Nav.Link href="#" style={{ marginLeft: '2em' }}>Help</Nav.Link>
-
-            <Nav.Link href="/login" style={{ marginLeft: '2em'}}> 
-              {<BsPersonFill style={{fontSize:"24px", marginRight:"6px"}} />}Account
-            </Nav.Link>
-
-            <Link to="/cart" style={{ marginLeft: '2em', position: "relative" }}>
-              <div style={{ display: "inline-block", margin:"5px" }}>
-                <BsFillCartFill style={{ fontSize: "30px", color: "black"}} />
+          <Nav className="me-auto my-2 my-lg-0" style={{ maxHeight: '100px' }}>
+            <Nav.Link href="/help" style={{ marginLeft: '2em' }}>Help</Nav.Link>
+            
+            {firstname ? ( // Check if the user is logged in
+              <Dropdown className='mt-1'>
+                <Dropdown.Toggle variant="transparent" id="account-dropdown" className='text-muted'>
+                 <BsPersonFill style={{ fontSize: "24px", marginRight: "3px", marginBottom:"4px" }}/> Hi, {firstname}
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  <Dropdown.Item href="/profile">Profile</Dropdown.Item>
+                  <Dropdown.Item href="/orders">Orders</Dropdown.Item>
+                  <br/>
+                  <Button variant='transparent' onClick={handleLogout} style={{ fontSize:"14px", float:"left", color:"orange"}}>LOGOUT</Button>
+                </Dropdown.Menu>
+              </Dropdown>
+            ) : (
+              <Nav.Link href="/login" style={{ marginLeft: '2em' }}>
+                <BsPersonFill style={{ fontSize: "24px", marginRight: "6px" }} />Account
+              </Nav.Link>
+            )}
+            
+            <Nav.Link to="/cart" style={{ marginLeft: '2em', }}>
+              <div>
+                <BsFillCartFill style={{ fontSize: "30px"}} />
                 {cartItemCount > 0 && (
                   <span
                     className="cart-notification"
@@ -80,7 +98,7 @@ function NavBar() {
                   </span>
                 )}
               </div>
-            </Link>
+            </Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>
