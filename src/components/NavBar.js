@@ -14,7 +14,7 @@ import Dropdown from 'react-bootstrap/Dropdown';
 function NavBar() {
   const cartItems = useSelector((state) => state.cart.items);
   const cartItemCount = cartItems.reduce((total, item) => total + item.quantity, 0);
-  const firstname = localStorage.getItem('firstname'); // Retrieve the stored first name
+  const first_name = localStorage.getItem('first_name'); // Retrieve the stored first name
 
   // Get the current location
   const location = useLocation();
@@ -35,7 +35,7 @@ function NavBar() {
   }
 
   function handleLogout(){
-    localStorage.removeItem('firstname');
+    localStorage.removeItem('first_name');
     
     window.location.href = '/';
 
@@ -59,16 +59,16 @@ function NavBar() {
           <Nav className="me-auto my-2 my-lg-0" style={{ maxHeight: '100px' }}>
             <Nav.Link href="/help" style={{ marginLeft: '2em' }}>Help</Nav.Link>
             
-            {firstname ? ( // Check if the user is logged in
+            {first_name ? ( // Check if the user is logged in
               <Dropdown className='mt-1'>
                 <Dropdown.Toggle variant="transparent" id="account-dropdown" className='text-muted'>
-                 <BsPersonFill style={{ fontSize: "24px", marginRight: "3px", marginBottom:"4px" }}/> Hi, {firstname}
+                 <BsPersonFill style={{ fontSize: "24px", marginRight: "3px", marginBottom:"4px" }}/> Hi, {first_name}
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
                   <Dropdown.Item href="/profile">Profile</Dropdown.Item>
                   <Dropdown.Item href="/orders">Orders</Dropdown.Item>
                   <br/>
-                  <Button variant='transparent' onClick={handleLogout} style={{ fontSize:"14px", float:"left", color:"orange"}}>LOGOUT</Button>
+                  <Button variant='transparent' onClick={handleLogout} style={{ fontSize:"14px", fontWeight:"bold", color:"orange", width:"100%"}}>LOGOUT</Button>
                 </Dropdown.Menu>
               </Dropdown>
             ) : (

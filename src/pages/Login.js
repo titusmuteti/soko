@@ -21,17 +21,14 @@ function Login() {
       body: JSON.stringify({ email, password })
     })
       .then((response) => {
-        console.log(response);
         setIsLoading(false); 
 
         if (response.ok) {
           response.json().then((data) => {
-            const { firstname } = data; // Assuming the API response contains the user's first name
+            const { first_name } = data;
             toast.success('Login successful');
-            // Store the user's first name in your application state or context here
-            // You can use Redux, React Context, or local state to store the first name.
-            // For example, using local state:
-            localStorage.setItem('firstname', firstname);
+         
+            localStorage.setItem('first_name', first_name);
             window.location.href = '/payment';
           });
         } else {
