@@ -15,7 +15,7 @@ function App() {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    fetch('https://fakestoreapi.com/products')
+    fetch('https://sokoapi.onrender.com/products')
       .then((response) => response.json())
       .then((products) => setProducts(products));
   }, []);
@@ -30,7 +30,7 @@ function App() {
         <Route path='/payment' element={<Payment/>} />
         <Route path='/login' element={<Login/>} />
       </Routes>
-      <ToastContainer autoClose={1000} className="centered-notification" />
+      <ToastContainer autoClose={1000} />
     </Router>
   );
 }

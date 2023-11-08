@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import './rating.css';
 
 function Rating({product}) {
-    const {rate, count } = product.rating 
-    const [rating, setRating] = useState(rate || 0); // Use the rating from the product prop of available
+    // const {rate} = product.rating 
+    const [rating, setRating] = useState(product.rating || 0); // Use the rating from the product prop of available
 
     function handleRating(newRating) {
         setRating(newRating);
@@ -23,7 +23,6 @@ function Rating({product}) {
             </span>
             ))}
         </div>
-        <small className="p-4">{count} items left</small>
         </div>
     );
 }
