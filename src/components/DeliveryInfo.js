@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import CitySelector from './CitySelector';
 
-const regionOptions = ["Nairobi", "Machakos", "Mombasa", "Nakuru", "Kisumu", "Malindi", "Kakamega", "Eldoret",
-   "Nyeri", "Muranga", "Nanyuki", "Bomet", "Kitui", "Wote", "Kitale", "Homabay", "Vihiga"];
+const regionOptions = ["Bomet", "Eldoret", "Homabay", "Kajiado", "Kakamega", "Kiambu", "Kilifi", "Kisumu", 
+"Kitui", "Liaikipia", "Machakos", "Makueni", "Mombasa","Muranga", "Nairobi", "Nakuru", "Narok", "Nyeri", "TransNzoia", "Vihiga"];
 
 function DeliveryInfo() {
   const [region, setRegion] = useState('');
