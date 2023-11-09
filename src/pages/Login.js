@@ -25,11 +25,13 @@ function Login() {
 
         if (response.ok) {
           response.json().then((data) => {
-            const { first_name } = data;
+            const { first_name, addresses } = data;
             toast.success('Login successful');
          
             localStorage.setItem('first_name', first_name);
-            window.location.href = '/payment';
+
+              // Passing the user's name and addresses to the Payment component
+            window.location.href = '/payment?first_name=' + first_name + '&addresses=' + JSON.stringify(addresses);
           });
         } else {
           response.json().then((error) => setErrors(error.errors));
