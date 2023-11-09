@@ -9,6 +9,7 @@ import ProductDetailsWrapper from './components/ProductDetailsWraper';
 import Cart from './pages/Cart';
 import Payment from './pages/Payment';
 import Login from './pages/Login';
+import Signup from './pages/signup';
 import './app.css';
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
         <Route path='/cart' element={<Cart/>} />
         <Route path='/payment' element={<Payment/>} />
         <Route path='/login' element={<Login/>} />
+        <Route path='/signup' element={<Signup/>} />
       </Routes>
       <ToastContainer autoClose={1000} />
     </Router>

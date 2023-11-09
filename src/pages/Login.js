@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import soko from '../assests/images/soko.png';
 import { Form } from 'react-bootstrap';
 import { Button } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -72,6 +73,7 @@ function Login() {
               {isLoading ? "Loading..." : "Login"}
             </Button>
           </Form>
+          <Link to="/signup" style={{color:"black", margin:"auto", marginBottom:"5px"}}>Don't have an Account? Signup</Link>
         </div>
       </div>
     </>
