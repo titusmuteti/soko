@@ -5,21 +5,26 @@ function CitySelector(props) {
   const { selectedRegion, onCityChange } = props;
 
   const citiesByRegion = {
-    Nairobi: ["CBD", "Wendani", "Ruiru", "Ngong", "Westlands", "Hurlingam", "Kawangware", "Githurai", "Njiru", "Westlands", "Hurlingham", "Dagoretti", "Karen", "Ongata Rongai", "Embakasi"],
-    Machakos: ["CBD", "Tala", "Athiriver", "Syokimau"],
-    Mombasa: ["CBD", "Changamwe", "Bombolulu", "Nyali", "Bamburi", "Nyali", "Mariakani"],
-    Nakuru: ["CBD", "Naivasha", "Gilgil", "Molo", "Njoro", "Bahati", "Rongai", "Kabarak"],
-    Kisumu: ["CBD", "Ahero", "Kondele", "Bondo", "Dunga Beach"],
-    Malindi: ["CBD"],
-    Kakamega: ["CBD", "Mumias", "Webuye", "Butere"],
-    Eldoret: ["CBD", "Moi's Bridge"],
-    Laikipia: ["Nanyuki"],
     Bomet: ["Bomet Town"],
-    Kitui: ["Kitui Town"],
-    Makueni: ["Wote"],
+    Eldoret: ["CBD", "Moi's Bridge", "Langas", "Huruma"],
+    Homabay: ["Homabay Town", "Kendu Bay", "Oyugis"],
+    Kajiado: ["Ongata Rongai", "Kajiado Town", "Kitengela", "Kiserian", "Isinya"],
+    Kakamega: ["CBD", "Mumias", "Webuye", "Butere"], 
+    Kiambu: ["Kiambu Town", "Thika", "Kikuyu", "Githurai", "Ruiru", "Limuru", "Kabete"],
+    Kilifi: ["Kilifi Town", "Malindi", "Mtwapa", "Watamu", "Vipingo", "Kilifi Creek"],
+    Kisumu: ["CBD", "Ahero", "Kondele", "Bondo", "Dunga Beach"],
+    Kitui: ["Kitui Town", "Mwingi"],
+    Laikipia: ["Nanyuki"],
+    Machakos: ["Machakos Town", "Tala", "Athiriver", "Syokimau", "Matuu"],
+    Makueni: ["Wote", "Emali", "Mtito Andei"],
+    Mombasa: ["CBD", "Changamwe", "Bombolulu", "Nyali", "Bamburi", "Likoni", "Kisauni", "Mikindani"],
+    Muranga: ["Muranga Town", "Gatanga"],
+    Nairobi: ["CBD", "Kilimani", "Ruiru", "Westlands", "Hurlingam", "Kawangware", "Njiru", "Westlands", "Hurlingham", "Dagoretti", "Karen", "Nairobi West", "South C", "South B", "Donholm", "Pipeline", "Kasarani", "Kahawa West", "Kayole", "Eastleigh"],
+    Nakuru: ["CBD", "Naivasha", "Gilgil", "Molo", "Njoro", "Bahati", "Rongai", "Kabarak"],
+    Narok: ["Narok Town"],
+    Nyeri: ["Nyeri Town", "Othaya" ],
     TransNzoia: ["Kitale"],
-    Homabay: ["Homabay Town"],
-    Vihiga: ["Vihiga Town"]
+    Vihiga: ["Mbale", "Chavakali"]
   };
 
   const handleCityChange = (event) => {
