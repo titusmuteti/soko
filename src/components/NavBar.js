@@ -42,56 +42,74 @@ function NavBar() {
   }
 
   return (
-    <Navbar expand="lg" className="bg-white" style={{ marginTop: '50px' }}>
+    <Navbar expand="lg" className="bg-white" style={{ marginTop: '40px' }}>
       <Container>
-        <Navbar.Brand href="/" style={{ fontWeight: 'bold' }}>SOKO <img src={soko} style={{ height: "10px" }} /> </Navbar.Brand>
-        <Form className="d-flex pl-4" style={{ width: '50em', marginLeft: '5em' }}>
+        <div className="d-flex justify-content-between align-items-center" style={{marginLeft:"200px"}}>
+          <Navbar.Brand href="/" style={{ fontWeight: 'bold' }}>
+            SOKO <img src={soko} style={{ height: "15px"}} />
+          </Navbar.Brand>
+        </div>
+        <Form className="d-flex" style={{ flex: 4 }}>
           <Form.Control
             type="search"
             placeholder="Search products, categories and brands"
             className="me-2"
             aria-label="Search"
           />
-          <Button variant="outline-success" style={{ background: 'orange' }}>SEARCH</Button>
+          <Button variant="outline-success" style={{ background: 'orange' }}>
+            SEARCH
+          </Button>
         </Form>
 
         <Navbar.Collapse id="navbarScroll">
-          <Nav className="me-auto my-2 my-lg-0" style={{ maxHeight: '100px' }}>
-            <Nav.Link href="/help" style={{ marginLeft: '2em' }}>Help</Nav.Link>
+          <Nav className="me-auto my-2 my-lg-0">
+            <Nav.Link href="/help">Help</Nav.Link>
             
             {first_name ? ( // Check if the user is logged in
               <Dropdown className='mt-1'>
                 <Dropdown.Toggle variant="transparent" id="account-dropdown" className='text-muted'>
-                 <BsPersonFill style={{ fontSize: "24px", marginRight: "3px", marginBottom:"4px" }}/> Hi, {first_name}
+                 <BsPersonFill style={{ fontSize: "24px", marginRight: "3px", marginBottom:"4px" }} /> Hi, {first_name}
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
                   <Dropdown.Item href="/profile">Profile</Dropdown.Item>
                   <Dropdown.Item href="/orders">Orders</Dropdown.Item>
-                  <br/>
-                  <Button variant='transparent' onClick={handleLogout} style={{ fontSize:"14px", fontWeight:"bold", color:"orange", width:"100%"}}>LOGOUT</Button>
+                  <Dropdown.Divider />
+                  <Button
+                    variant='transparent'
+                    onClick={handleLogout}
+                    style={{
+                      fontSize:"14px",
+                      fontWeight:"bold",
+                      color:"orange",
+                      width:"100%"
+                    }}
+                  >
+                    LOGOUT
+                  </Button>
                 </Dropdown.Menu>
               </Dropdown>
             ) : (
-              <Nav.Link href="/login" style={{ marginLeft: '2em' }}>
+              <Nav.Link href="/login">
                 <BsPersonFill style={{ fontSize: "24px", marginRight: "6px" }} />Account
               </Nav.Link>
             )}
             
-            <Nav.Link to="/cart" style={{ marginLeft: '2em', }}>
-              <div>
-                <BsFillCartFill style={{ fontSize: "30px"}} />
+            <Nav.Link href="/cart">
+              <div style={{ position: "relative" }}>
+                <BsFillCartFill style={{ fontSize: "24px" }} /> Cart
                 {cartItemCount > 0 && (
                   <span
                     className="cart-notification"
                     style={{
                       backgroundColor: "orange",
-                      color: "white",
-                      borderRadius: "30%",
-                      padding: "4px",
-                      fontSize: "12px",
+                      borderRadius: "100%",
+                      padding: "2px 6px",
+                      fontSize: "10px",
                       position: "absolute",
-                      top: "-5px",
-                      right: "0px",
+                      bottom: "10px",
+                      right: "34px",
+                      fontWeight: "bold",
+                      position: "absolute",
                     }}
                   >
                     {cartItemCount}
