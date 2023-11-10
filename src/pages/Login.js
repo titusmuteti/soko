@@ -38,7 +38,7 @@ function Login() {
             // Dispatch the loginUser action after a successful login
             dispatch(loginUser({first_name, last_name, phone_number, email, addresses}));
 
-            navigate('/payment');
+            navigate('/');
           });
         } else {
           response.json().then((error) => setErrors(error.errors));
