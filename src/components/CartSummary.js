@@ -1,7 +1,19 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 
 function CartSummary({ subtotal }) {
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const navigate = useNavigate();
+
+  const handleCheckout = () => {
+    if (isAuthenticated) {
+      navigate('/payment');
+    } else {
+      navigate('/login');
+    }
+  }
+
   return (
     <div className="card border-primary mb-3">
       <div className="card-header bg-primary text-white">
@@ -14,11 +26,11 @@ function CartSummary({ subtotal }) {
           Subtotal: <span className="fs-4" style={{ marginLeft: "80px" }}>KSh{subtotal}</span>
         </small>
         <hr />
-        <Link to="/login">
-          <button className="btn btn-success w-100">
+        {/* <Link to="/login"> */}
+          <button className="btn btn-success w-100" onClick={handleCheckout}>
             CHECKOUT <small>(KSH{subtotal})</small>
           </button>
-        </Link>
+        {/* </Link> */}
       </div>
     </div>
   );

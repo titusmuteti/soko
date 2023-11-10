@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import soko from '../assests/images/soko.png';
-import { Form } from 'react-bootstrap';
-import { Button } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Form, Button } from 'react-bootstrap';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { loginUser } from '../redux/authActions';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -11,10 +12,13 @@ function Login() {
   const [errors, setErrors] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   function handleLogin(event) {
     event.preventDefault();
 
-    setIsLoading(true); 
+    setIsLoading(true);
 
     fetch('https://sokoapi.onrender.com/login', {
       method: 'POST',
@@ -22,23 +26,25 @@ function Login() {
       body: JSON.stringify({ email, password })
     })
       .then((response) => {
-        setIsLoading(false); 
+        setIsLoading(false);
 
         if (response.ok) {
           response.json().then((data) => {
             const { first_name, addresses } = data;
             toast.success('Login successful');
-         
+
             localStorage.setItem('first_name', first_name);
 
-              // Passing the user's name and addresses to the Payment component
-            window.location.href = '/payment?first_name=' + first_name + '&addresses=' + JSON.stringify(addresses);
+            // Dispatch the loginUser action after a successful login
+            dispatch(loginUser());
+
+            // Use the navigate function from useNavigate to navigate to the '/payment' route
+            navigate('/payment', { state: { first_name, addresses } });
           });
         } else {
           response.json().then((error) => setErrors(error.errors));
           toast.warning('Wrong email or password');
         }
-        
       });
   }
 
@@ -73,7 +79,7 @@ function Login() {
               {isLoading ? "Loading..." : "Login"}
             </Button>
           </Form>
-          <Link to="/signup" style={{color:"black", margin:"auto", marginBottom:"5px"}}>Don't have an Account? Signup</Link>
+          <Link to="/signup" style={{ color: "black", margin: "auto", marginBottom: "5px" }}>Don't have an Account? Signup</Link>
         </div>
       </div>
     </>
