@@ -18,6 +18,7 @@ function CustomAddressData({ user }) {
               </div>
               <div className="col-md-6">
                 <div>
+                  {/* Correctly access user data */}
                   <p>{user.first_name} {user.last_name}</p>
                   <p>{address.region}</p>
                   <p>{address.city}</p>
