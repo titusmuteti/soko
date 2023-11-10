@@ -33,7 +33,7 @@ function Login() {
             const { first_name, last_name, phone_number, email, addresses } = data;
             toast.success('Login successful');
 
-            localStorage.setItem('first_name', first_name);
+            localStorage.setItem('user', JSON.stringify(data));
 
             // Dispatch the loginUser action after a successful login
             dispatch(loginUser({first_name, last_name, phone_number, email, addresses}));
