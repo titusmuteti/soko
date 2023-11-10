@@ -7,7 +7,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import { BsFillCartFill } from "react-icons/bs";
 import { BsPersonFill } from 'react-icons/bs';
 import { useSelector, useDispatch } from 'react-redux'; 
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import soko from '../assests/images/soko.png';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { logoutUser } from '../redux/authActions';
