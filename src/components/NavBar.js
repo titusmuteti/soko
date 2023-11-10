@@ -6,36 +6,41 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { BsFillCartFill } from "react-icons/bs";
 import { BsPersonFill } from 'react-icons/bs';
-import { useSelector } from 'react-redux'; 
+import { useSelector, useDispatch } from 'react-redux'; 
 import { Link, useLocation } from 'react-router-dom';
 import soko from '../assests/images/soko.png';
 import Dropdown from 'react-bootstrap/Dropdown';
+import { logoutUser } from '../redux/authActions';
 
 function NavBar() {
   const cartItems = useSelector((state) => state.cart.items);
   const cartItemCount = cartItems.reduce((total, item) => total + item.quantity, 0);
-  const first_name = localStorage.getItem('first_name'); // Retrieve the stored first name
+  const first_name = localStorage.getItem('first_name'); 
 
-  // Get the current location
+  const dispatch = useDispatch();
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+
+  // Gets current location
   const location = useLocation();
 
-  // Define an array of route paths where you want to display the NavBar
+  //array of route paths where you want to display the NavBar
   const showNavBarOnRoutes = ['/cart', '/payment', "/"];
 
-  // Include product detail routes like 'products/1', 'products/2', etc.
   if (location.pathname.startsWith('/products/')) {
     showNavBarOnRoutes.push(location.pathname);
   }
 
-  // Check if the current location is in the array
+  // Checks if the current location is in the array
   const shouldShowNavBar = showNavBarOnRoutes.includes(location.pathname);
 
   if (!shouldShowNavBar) {
-    return null; // Don't render the NavBar on certain routes
+    return null; 
   }
 
   function handleLogout(){
     localStorage.removeItem('first_name');
+
+    dispatch(logoutUser());
     
     window.location.href = '/';
 
