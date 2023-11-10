@@ -15,12 +15,11 @@ import { logoutUser } from '../redux/authActions';
 function NavBar() {
   const cartItems = useSelector((state) => state.cart.items);
   const cartItemCount = cartItems.reduce((total, item) => total + item.quantity, 0);
-  const first_name = localStorage.getItem('first_name'); 
+
+  const user = JSON.parse(localStorage.getItem('user'));
+  const first_name = user ? user.first_name : null;
 
   const dispatch = useDispatch();
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-
-  // Gets current location
   const location = useLocation();
 
   //array of route paths where you want to display the NavBar
@@ -38,7 +37,7 @@ function NavBar() {
   }
 
   function handleLogout(){
-    localStorage.removeItem('first_name');
+    localStorage.removeItem('user');
 
     dispatch(logoutUser());
     
@@ -110,7 +109,6 @@ function NavBar() {
                       borderRadius: "100%",
                       padding: "2px 6px",
                       fontSize: "10px",
-                      position: "absolute",
                       bottom: "10px",
                       right: "34px",
                       fontWeight: "bold",
