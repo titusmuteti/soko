@@ -1,16 +1,25 @@
 const initialState = {
-    isAuthenticated: false,
-  };
-  
-  const authReducer = (state = initialState, action) => {
-    switch (action.type) {
-      case 'LOGIN_USER':
-        return { ...state, isAuthenticated: true };
-      case 'LOGOUT_USER':
-        return { ...state, isAuthenticated: false };
-      default:
-        return state;
-    }
-  };
+  isAuthenticated: false,
+  user: null,
+};
 
-  export default authReducer;
+const authReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case 'LOGIN_USER':
+      return {
+        ...state,
+        isAuthenticated: true,
+        user: action.payload,
+      };
+    case 'LOGOUT_USER':
+      return {
+        ...state,
+        isAuthenticated: false,
+        user: null,
+      };
+    default:
+      return state;
+  }
+};
+
+export default authReducer;

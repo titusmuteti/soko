@@ -30,16 +30,15 @@ function Login() {
 
         if (response.ok) {
           response.json().then((data) => {
-            const { first_name, addresses } = data;
+            const { first_name, last_name, phone_number, email, addresses } = data;
             toast.success('Login successful');
 
             localStorage.setItem('first_name', first_name);
 
             // Dispatch the loginUser action after a successful login
-            dispatch(loginUser());
+            dispatch(loginUser({first_name, last_name, phone_number, email, addresses}));
 
-            // Use the navigate function from useNavigate to navigate to the '/payment' route
-            navigate('/payment', { state: { first_name, addresses } });
+            navigate('/payment');
           });
         } else {
           response.json().then((error) => setErrors(error.errors));
