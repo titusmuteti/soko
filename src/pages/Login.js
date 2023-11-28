@@ -46,7 +46,8 @@ function Login() {
             dispatch(loginUser({ user, userId }));
   
             // Pass dispatch and navigate to FetchOrders
-            FetchOrders(userId, dispatch, navigate);
+            FetchOrders(userId, dispatch);
+            navigate('/');
           });
         } else {
           response.json().then((error) => setErrors(error.errors));

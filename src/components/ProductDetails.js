@@ -15,13 +15,14 @@ import FetchOrders from './FetchOrders';
 
 function ProductDetail({ product }) {
   const [showModal, setShowModal] = useState(false);
-  const [localQuantity, setLocalQuantity] = useState(0); // Local state to track quantity
+  const [localQuantity, setLocalQuantity] = useState(1); 
   const handleClose = () => setShowModal(false);
   const handleShow = () => setShowModal(true);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const cartItems = useSelector((state) => state.cart.items);
+  console.log(cartItems);
   const userId = useSelector((state) => state.auth.userId);
 
   // Check if the product is in the cart
@@ -34,7 +35,7 @@ function ProductDetail({ product }) {
       try {
         if (userId) {
           // Pass dispatch as an argument to FetchOrders
-          const orderItems = await FetchOrders(userId, dispatch, navigate);
+          const orderItems = await FetchOrders(userId, dispatch);
           
           // Dispatch actions to update the Redux store
           dispatch(initializeCart(orderItems, userId));
@@ -45,53 +46,58 @@ function ProductDetail({ product }) {
     };
   
     fetchData();
-  }, [dispatch, userId, navigate]);
+  }, [dispatch, userId]);
     
 
-  const handleAddToCart = () => {
-    const token = localStorage.getItem('token');
-    // const userId = user.id
+  const handleAddToCart = async (event) => {
+    event.preventDefault(); 
 
-    fetch('https://sokoapi.onrender.com/orders', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      },
-      body: JSON.stringify({ product_id: product.id, user_id: userId}),
-    })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          return response.json().then(data => {
-            console.error('Failed to add product to cart:', data.errors);
-            throw new Error('Failed to add product to cart');
-          });
-        }
-      })
-      .then(data => {
-        console.log('Product added to cart successfully', data.user_id);
-
-        const item = {
-          id: product.id,
-          title: product.title,
-          image: product.image,
-          price: product.price,
-          quantity: 1,
-          order_item_ids: data.order_item_ids,
-        };
-
-        const userId = data.user_id;
-
-        // Pass the userId when dispatching addToCart action
-        dispatch(addToCart(item, userId));
-      })
-      .catch(error => {
-        console.error('An unexpected error occurred:', error);
+    try {
+      const token = localStorage.getItem('token');
+  
+      const response = await fetch('https://sokoapi.onrender.com/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ product_id: product.id, user_id: userId }),
       });
+  
+      if (!response.ok) {
+        const data = await response.json();
+        console.error('Failed to add product to cart:', data.errors);
+        throw new Error('Failed to add product to cart');
+      }
+  
+      const data = await response.json();
+      console.log('Product added to cart successfully', data.user_id);
+  
+      const item = {
+        id: product.id,
+        title: product.title,
+        image: product.image,
+        price: product.price,
+        quantity: 1,
+        order_item_ids: data.order_item_ids,
+      };
+  
+      const updatedUserId = data.user_id;
+  
+      // Pass the userId when dispatching addToCart action
+      dispatch(addToCart(item, updatedUserId));
+  
+      // Wait for the state to be updated before proceeding
+      await new Promise((resolve) => setTimeout(resolve, 0));
+  
+      // Update local quantity based on the updated cartItems state
+      const updatedProductInCart = cartItems.find((item) => item && item.id === product.id);
+      setLocalQuantity(updatedProductInCart.quantity);
+    } catch (error) {
+      console.error('An unexpected error occurred:', error);
+    }
   };
-
+  
   function handleIncreaseQuantity() {
     // Check if the product is in the cart
     const productInCart = cartItems.find((item) => item && item.id === product.id);
@@ -198,7 +204,7 @@ function ProductDetail({ product }) {
                   </div>
                 ) : (
                   <div className="d-flex justify-content-between align-items-center">
-                    <button className="btn btn-primary m-4" style={{ width: '100%' }} onClick={handleAddToCart}>
+                    <button className="btn btn-primary m-4" style={{ width: '100%' }} onClick={(event) => handleAddToCart(event)}>
                       <span className="me-1"><BsFillCartFill /></span>Add to Cart
                     </button>
                   </div>
