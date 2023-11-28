@@ -44,6 +44,8 @@ function Login() {
             localStorage.setItem('token', token);
   
             dispatch(loginUser({ user, userId }));
+
+            dispatch({ type: 'SET_TOKEN', payload: token });
   
             // Pass dispatch and navigate to FetchOrders
             FetchOrders(userId, dispatch);

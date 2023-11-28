@@ -51,6 +51,7 @@ async function FetchOrders(userId, dispatch) {
 
     // Wait for all fetch requests to complete
     const orderItems = await Promise.all(fetchItemPromises);
+    dispatch({ type: 'SET_AUTHENTICATED', payload: true });
 
     // Dispatch actions to update the Redux store
     dispatch(initializeCart(orderItems, userId));
