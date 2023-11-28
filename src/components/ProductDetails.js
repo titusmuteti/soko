@@ -83,6 +83,7 @@ function ProductDetail({ product }) {
       };
   
       const updatedUserId = data.user_id;
+      console.log(item);
   
       // Pass the userId when dispatching addToCart action
       dispatch(addToCart(item, updatedUserId));
@@ -101,6 +102,7 @@ function ProductDetail({ product }) {
   function handleIncreaseQuantity() {
     // Check if the product is in the cart
     const productInCart = cartItems.find((item) => item && item.id === product.id);
+    console.log(productInCart);
   
     if (!productInCart) {
       console.error("Product not found in the cart");

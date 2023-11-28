@@ -1,10 +1,19 @@
-export const initializeCart = (orderItems, userId) => {
-  return {
-    type: 'INITIALIZE_CART',
-    payload: { orderItems, userId },
+export const initializeCart = (cartData, userId) => {
+  return (dispatch) => {
+    // Dispatch action to initialize Redux store
+    dispatch({
+      type: 'INITIALIZE_CART',
+      payload: { orderItems: cartData, userId },
+    });
+
+    // Update user-specific localStorage with the fetched cart data
+    const updatedCart = {
+      items: cartData.map((item) => ({ ...item, userId })),
+    };
+    localStorage.setItem(`cart_${userId}`, JSON.stringify(updatedCart));
   };
 };
- 
+
 
 export const clearCart = () => {
   return {
