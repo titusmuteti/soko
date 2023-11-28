@@ -1,50 +1,169 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { BsFillCartFill } from 'react-icons/bs';
 import { Modal, Button, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart, removeFromCart, increaseQuantity, decreaseQuantity } from '../redux/cartActions';
+import { initializeCart } from '../redux/cartActions';
 
 import DeliveryInfo from './DeliveryInfo';
 import ProductSpecification from './ProductSpecifications';
 import Rating from './Rating';
-import './cart.css'
+import './cart.css';
+import FetchOrders from './FetchOrders'; 
 
 function ProductDetail({ product }) {
   const [showModal, setShowModal] = useState(false);
+  const [localQuantity, setLocalQuantity] = useState(0); // Local state to track quantity
   const handleClose = () => setShowModal(false);
   const handleShow = () => setShowModal(true);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const cartItems = useSelector((state) => state.cart.items);
+  const userId = useSelector((state) => state.auth.userId);
 
   // Check if the product is in the cart
-  const productInCart = cartItems.find((item) => item.id === product.id);
+  const productInCart = cartItems.find((item) => item && item.id === product.id);
 
-  function handleAddToCart() {
-    const item = {
-      id: product.id,
-      title: product.title,
-      image: product.image,
-      price: product.price,
-      quantity: 1,
+  // const userId = useSelector((state) => state.auth.userId);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (userId) {
+          // Pass dispatch as an argument to FetchOrders
+          const orderItems = await FetchOrders(userId, dispatch, navigate);
+          
+          // Dispatch actions to update the Redux store
+          dispatch(initializeCart(orderItems, userId));
+        }
+      } catch (error) {
+        console.error('An error occurred while fetching orders:', error);
+      }
     };
+  
+    fetchData();
+  }, [dispatch, userId, navigate]);
+    
 
-    dispatch(addToCart(item));
-  }
+  const handleAddToCart = () => {
+    const token = localStorage.getItem('token');
+    // const userId = user.id
+
+    fetch('https://sokoapi.onrender.com/orders', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify({ product_id: product.id, user_id: userId}),
+    })
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          return response.json().then(data => {
+            console.error('Failed to add product to cart:', data.errors);
+            throw new Error('Failed to add product to cart');
+          });
+        }
+      })
+      .then(data => {
+        console.log('Product added to cart successfully', data.user_id);
+
+        const item = {
+          id: product.id,
+          title: product.title,
+          image: product.image,
+          price: product.price,
+          quantity: 1,
+          order_item_ids: data.order_item_ids,
+        };
+
+        const userId = data.user_id;
+
+        // Pass the userId when dispatching addToCart action
+        dispatch(addToCart(item, userId));
+      })
+      .catch(error => {
+        console.error('An unexpected error occurred:', error);
+      });
+  };
 
   function handleIncreaseQuantity() {
-    dispatch(increaseQuantity(product.id));
-  }
-
-  function handleDecreaseQuantity() {
-    if (productInCart && productInCart.quantity > 1) {
-      dispatch(decreaseQuantity(product.id));
-    } else {
-      dispatch(removeFromCart(product.id));
+    // Check if the product is in the cart
+    const productInCart = cartItems.find((item) => item && item.id === product.id);
+  
+    if (!productInCart) {
+      console.error("Product not found in the cart");
+      return;
     }
+  
+    if (!productInCart.order_item_ids || productInCart.order_item_ids.length === 0) {
+      console.error("Order item IDs not found");
+      return;
+    }
+  
+    const orderItemId = productInCart.order_item_ids[0];
+    const increaseQuantityRequest = {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+      },
+      body: JSON.stringify({ increase_quantity: true }),
+    };
+  
+    console.log('Sending increase quantity request:', increaseQuantityRequest);
+  
+    fetch(`https://sokoapi.onrender.com/order_items/${orderItemId}`, increaseQuantityRequest)
+      .then(response => {
+        console.log('Received response:', response);
+  
+        if (response.ok) {
+          console.log('Quantity increased successfully');
+          dispatch(increaseQuantity(product.id));
+          setLocalQuantity(localQuantity + 1); // Update local quantity
+        } else {
+          console.log('Failed to increase quantity');
+        }
+      })
+      .catch(error => {
+        console.error('An unexpected error occurred:', error);
+      });
   }
   
+
+  function handleDecreaseQuantity() {
+    const orderItem = productInCart.order_item_ids.find(id => id === product.orderItemId);
+
+    if (!orderItem) {
+      console.error("Order item not found");
+      return;
+    }
+
+    fetch(`https://sokoapi.onrender.com/order_items/${orderItem}?decrease_quantity=true`, {
+      method: 'PATCH',
+    })
+      .then(response => {
+        if (response.ok) {
+          console.log('Quantity decreased successfully');
+          dispatch(decreaseQuantity(product.id));
+          setLocalQuantity(localQuantity - 1); // Update local quantity
+        } else {
+          dispatch(removeFromCart(product.id));
+          return response.json().then(data => {
+            console.error('Failed to decrease quantity:', data.errors);
+          });
+        }
+      })
+      .catch(error => {
+        console.error('An unexpected error occurred:', error);
+      });
+  }
+
   return (
     <>
       <div className="container d-flex justify-content-center mt-5">
@@ -62,7 +181,7 @@ function ProductDetail({ product }) {
                 <h3 className="card-title">{product.title}</h3>
 
                 <hr /> {/* Add a horizontal line below the title */}
-                <h4 className="fw-bold" >KSh{product.price}</h4>
+                <h4 className="fw-bold">KSh{product.price}</h4>
 
                 {/* Product Rating */}
                 <Rating product={product} />
@@ -71,11 +190,11 @@ function ProductDetail({ product }) {
                     <button className="btn btn-primary" onClick={handleDecreaseQuantity}>
                       -
                     </button>
-                    <span>{productInCart.quantity}</span>
+                    <span>{localQuantity}</span>
                     <button className="btn btn-primary" onClick={handleIncreaseQuantity}>
                       +
                     </button>
-                    <small className="d-inline">({productInCart.quantity} item(s) added to cart)</small>
+                    <small className="d-inline">({localQuantity} item(s) added to cart)</small>
                   </div>
                 ) : (
                   <div className="d-flex justify-content-between align-items-center">

@@ -5,6 +5,7 @@ import { Form, Button } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { loginUser } from '../redux/authActions';
+import FetchOrders from '../components/FetchOrders';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -17,9 +18,9 @@ function Login() {
 
   function handleLogin(event) {
     event.preventDefault();
-
+  
     setIsLoading(true);
-
+  
     fetch('https://sokoapi.onrender.com/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
@@ -27,25 +28,37 @@ function Login() {
     })
       .then((response) => {
         setIsLoading(false);
-
+  
         if (response.ok) {
           response.json().then((data) => {
-            const { first_name, last_name, phone_number, email, addresses } = data;
+            console.log('Login API Response:', data);
+  
+            const { user, token } = data;
+  
+            // Extract user ID
+            const userId = user.id;
+  
             toast.success('Login successful');
-
-            localStorage.setItem('user', JSON.stringify(data));
-
-            // Dispatch the loginUser action after a successful login
-            dispatch(loginUser({first_name, last_name, phone_number, email, addresses}));
-
-            navigate('/');
+  
+            localStorage.setItem('user', JSON.stringify(user));
+            localStorage.setItem('token', token);
+  
+            dispatch(loginUser({ user, userId }));
+  
+            // Pass dispatch and navigate to FetchOrders
+            FetchOrders(userId, dispatch, navigate);
           });
         } else {
           response.json().then((error) => setErrors(error.errors));
           toast.warning('Wrong email or password');
         }
+      })
+      .catch((error) => {
+        console.error('An error occurred during login:', error);
       });
   }
+  
+   
 
   return (
     <>
@@ -68,7 +81,7 @@ function Login() {
 
               <Form.Label className='mt-4'><small>Password</small></Form.Label>
               <Form.Control
-                type='password' 
+                type='password'
                 placeholder='Enter password'
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}

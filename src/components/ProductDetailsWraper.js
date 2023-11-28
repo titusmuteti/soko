@@ -4,8 +4,6 @@ import ProductDetails from './ProductDetails';
 
 function ProductDetailsWrapper({ products }) {
   const { id } = useParams(); 
-  console.log("ID from URL:", id);
-  console.log("Products from API:", products);
 
   if (!products || products.length === 0) {   
     return <div>Loading...</div>;

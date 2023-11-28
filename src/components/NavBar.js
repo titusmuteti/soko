@@ -13,8 +13,8 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import { logoutUser } from '../redux/authActions';
 
 function NavBar() {
-  const cartItems = useSelector((state) => state.cart.items);
-  const cartItemCount = cartItems.reduce((total, item) => total + item.quantity, 0);
+  // const cartItems = useSelector((state) => state.cart.items);
+  // const cartItemCount = cartItems.reduce((total, item) => total + item.quantity, 0);
 
   const user = JSON.parse(localStorage.getItem('user'));
   const first_name = user ? user.first_name : null;
@@ -101,7 +101,7 @@ function NavBar() {
             <Nav.Link href="/cart">
               <div style={{ position: "relative" }}>
                 <BsFillCartFill style={{ fontSize: "24px" }} /> Cart
-                {cartItemCount > 0 && (
+                {/* {cartItemCount > 0 && (
                   <span
                     className="cart-notification"
                     style={{
@@ -117,7 +117,7 @@ function NavBar() {
                   >
                     {cartItemCount}
                   </span>
-                )}
+                )} */}
               </div>
             </Nav.Link>
           </Nav>
