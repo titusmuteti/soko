@@ -22,23 +22,28 @@ function ProductDetail({ product }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const cartItems = useSelector((state) => state.cart.items);
-  console.log(cartItems);
   const userId = useSelector((state) => state.auth.userId);
+  console.log(cartItems);
 
   // Check if the product is in the cart
   const productInCart = cartItems.find((item) => item && item.id === product.id);
-
-  // const userId = useSelector((state) => state.auth.userId);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         if (userId) {
-          // Pass dispatch as an argument to FetchOrders
           const orderItems = await FetchOrders(userId, dispatch);
-          
-          // Dispatch actions to update the Redux store
-          dispatch(initializeCart(orderItems, userId));
+  
+          // Check if orderItems is not undefined or null
+          if (orderItems) {
+            dispatch(initializeCart(orderItems, userId));
+  
+            // Find the product in the updated cartItems
+            const updatedProductInCart = orderItems.find((item) => item && item.id === product.id);
+  
+          // Update local quantity dynamically from the backend
+          setLocalQuantity(updatedProductInCart ? updatedProductInCart.quantity : 0);
+        }
         }
       } catch (error) {
         console.error('An error occurred while fetching orders:', error);
@@ -46,12 +51,23 @@ function ProductDetail({ product }) {
     };
   
     fetchData();
-  }, [dispatch, userId]);
-    
+  }, [dispatch, userId, product.id]); 
+
+  useEffect(() => {
+    // Update local quantity based on the updated cartItems state
+    const updatedProductInCart = cartItems.find((item) => item && item.product && item.product.id === product.id);
+
+    if (updatedProductInCart) {
+      setLocalQuantity(updatedProductInCart.quantity);
+    } else {
+      // Handle the case where the product is not in the cart
+      console.error("Product not found in the cart");
+    }
+  }, [cartItems, product.id, dispatch]);
 
   const handleAddToCart = async (event) => {
-    event.preventDefault(); 
-
+    event.preventDefault();
+  
     try {
       const token = localStorage.getItem('token');
   
@@ -63,7 +79,7 @@ function ProductDetail({ product }) {
         },
         body: JSON.stringify({ product_id: product.id, user_id: userId }),
       });
-  
+      
       if (!response.ok) {
         const data = await response.json();
         console.error('Failed to add product to cart:', data.errors);
@@ -73,35 +89,72 @@ function ProductDetail({ product }) {
       const data = await response.json();
       console.log('Product added to cart successfully', data.user_id);
   
+      // Extracting quantity, total_price, and unit_price from order_item_ids
+      const orderItemsData = await Promise.all(
+        data.order_item_ids.map(async (orderItemId) => {
+          const orderItemResponse = await fetch(`https://sokoapi.onrender.com/order_items/${orderItemId}`);
+          if (!orderItemResponse.ok) {
+            console.error('Failed to fetch order item details');
+            return null;
+          }
+          const orderItemData = await orderItemResponse.json();
+          return orderItemData;
+        })
+      );
+  
+      // Filter out null values from orderItemsData
+      const validOrderItemsData = orderItemsData.filter(item => item !== null);
+  
+      // Wait for all asynchronous operations to complete
+      await Promise.all([
+      ]);
+      
+    console.log(validOrderItemsData);  
+    const matchingOrderItem = validOrderItemsData.find(item => item.product.id === product.id);
+    console.log('Matching Order Item:', matchingOrderItem);
+
       const item = {
-        id: product.id,
-        title: product.title,
-        image: product.image,
-        price: product.price,
-        quantity: 1,
-        order_item_ids: data.order_item_ids,
+        id: data.id,
+        order: data,
+        product: product, // Use the 'product' parameter directly
+        quantity: matchingOrderItem?.quantity || 1,
+        total_price: validOrderItemsData.reduce((acc, item) => acc + item.total_price, 0),
+        unit_price: validOrderItemsData.reduce((acc, item) => acc + item.unit_price, 0),
       };
   
       const updatedUserId = data.user_id;
-      console.log(item);
+      console.log(item.quantity);
   
       // Pass the userId when dispatching addToCart action
       dispatch(addToCart(item, updatedUserId));
+
+
+      setLocalQuantity(item.quantity);
   
       // Wait for the state to be updated before proceeding
       await new Promise((resolve) => setTimeout(resolve, 0));
   
       // Update local quantity based on the updated cartItems state
-      const updatedProductInCart = cartItems.find((item) => item && item.id === product.id);
-      setLocalQuantity(updatedProductInCart.quantity);
+      const updatedProductInCart = cartItems.find((item) => item && item.product && item.product.id === product.id);
+      console.log(updatedProductInCart);
+
+      if (updatedProductInCart) {
+        console.log(updatedProductInCart.quantity);
+        setLocalQuantity(updatedProductInCart.quantity);
+      } else {
+        // Handle the case where the product is not in the cart
+        console.error("Product not found in the cart");
+      }
+      
     } catch (error) {
       console.error('An unexpected error occurred:', error);
     }
-  };
+  };  
   
-  function handleIncreaseQuantity() {
+  function handleIncreaseQuantity(productId) {
     // Check if the product is in the cart
-    const productInCart = cartItems.find((item) => item && item.id === product.id);
+    const productInCart = cartItems.find((item) => item && item.id === productId);
+  
     console.log(productInCart);
   
     if (!productInCart) {
@@ -114,7 +167,6 @@ function ProductDetail({ product }) {
       return;
     }
   
-    const orderItemId = productInCart.order_item_ids[0];
     const increaseQuantityRequest = {
       method: 'PATCH',
       headers: {
@@ -126,24 +178,26 @@ function ProductDetail({ product }) {
   
     console.log('Sending increase quantity request:', increaseQuantityRequest);
   
-    fetch(`https://sokoapi.onrender.com/order_items/${orderItemId}`, increaseQuantityRequest)
-      .then(response => {
-        console.log('Received response:', response);
+    // Loop through all order item IDs and send increase quantity request
+    productInCart.order_item_ids.forEach((orderItemId) => {
+      fetch(`https://sokoapi.onrender.com/order_items/${orderItemId}`, increaseQuantityRequest)
+        .then(response => {
+          console.log('Received response:', response);
   
-        if (response.ok) {
-          console.log('Quantity increased successfully');
-          dispatch(increaseQuantity(product.id));
-          setLocalQuantity(localQuantity + 1); // Update local quantity
-        } else {
-          console.log('Failed to increase quantity');
-        }
-      })
-      .catch(error => {
-        console.error('An unexpected error occurred:', error);
-      });
+          if (response.ok) {
+            console.log('Quantity increased successfully');
+            // Update local quantity or dispatch an action as needed
+          } else {
+            console.log('Failed to increase quantity');
+            throw new Error('Failed to increase quantity'); 
+          }
+        })
+        .catch(error => {
+          console.error('An unexpected error occurred:', error);
+        });
+    });
   }
   
-
   function handleDecreaseQuantity() {
     const orderItem = productInCart.order_item_ids.find(id => id === product.orderItemId);
 
@@ -198,11 +252,11 @@ function ProductDetail({ product }) {
                     <button className="btn btn-primary" onClick={handleDecreaseQuantity}>
                       -
                     </button>
-                    <span>{localQuantity}</span>
-                    <button className="btn btn-primary" onClick={handleIncreaseQuantity}>
+                    <span>{localQuantity !== null ? localQuantity : 'Loading...'}</span>
+                    <button className="btn btn-primary" onClick={() => handleIncreaseQuantity(product.id)}>
                       +
                     </button>
-                    <small className="d-inline">({localQuantity} item(s) added to cart)</small>
+                    <small className="d-inline">({localQuantity !== null ? `${localQuantity} item(s) added to cart` : 'Loading...'})</small>
                   </div>
                 ) : (
                   <div className="d-flex justify-content-between align-items-center">
