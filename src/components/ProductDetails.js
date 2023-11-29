@@ -24,35 +24,50 @@ function ProductDetail({ product }) {
   const navigate = useNavigate();
   const cartItems = useSelector((state) => state.cart.items);
   const userId = useSelector((state) => state.auth.userId);
-  console.log(cartItems);
+  const productInCart = cartItems.find((item) => item && item.product && item.product.id === product.id);
 
-  // Check if the product is in the cart
-  const productInCart = cartItems.find((item) => item && item.id === product.id);
+  // Initialize localQuantity from localStorage on component mount
+  useEffect(() => {
+    const storedQuantity = localStorage.getItem(`localQuantity_${product.id}`);
+    setLocalQuantity(storedQuantity ? parseInt(storedQuantity, 10) : 1);
+  }, [product.id]);
+
+  // Check if the product is in the cart and set localQuantity accordingly
+  useEffect(() => {
+    if (productInCart) {
+      setLocalQuantity(productInCart.quantity);
+    }
+  }, [productInCart]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         if (userId) {
+          // Call FetchOrders and await the result
           const orderItems = await FetchOrders(userId, dispatch);
   
-          // Check if orderItems is not undefined or null
+          // Check if orderItems is defined before proceeding
           if (orderItems) {
+            // Dispatch actions to update the Redux store
             dispatch(initializeCart(orderItems, userId));
   
-            // Find the product in the updated cartItems
+            // Find the updated product in the cart
             const updatedProductInCart = orderItems.find((item) => item && item.id === product.id);
   
-          // Update local quantity dynamically from the backend
-          setLocalQuantity(updatedProductInCart ? updatedProductInCart.quantity : 0);
-        }
+            // Set localQuantity based on the updated cart information
+            setLocalQuantity(updatedProductInCart ? updatedProductInCart.quantity : 0);
+          }
         }
       } catch (error) {
         console.error('An error occurred while fetching orders:', error);
       }
     };
   
-    fetchData();
-  }, [dispatch, userId, product.id]); 
+    fetchData(); // Call the fetchData function
+  
+    // Specify the dependencies for the useEffect hook
+  }, [dispatch, userId, product.id]);  
+  
 
   useEffect(() => {
     // Update local quantity based on the updated cartItems state
@@ -65,37 +80,31 @@ function ProductDetail({ product }) {
       console.error("Product not found in the cart");
     }
   }, [cartItems, product.id]);
-  
+
+  // Save to localStorage when localQuantity changes
+  useEffect(() => {
+    localStorage.setItem(`localQuantity_${product.id}`, (localQuantity || 0).toString());
+  }, [localQuantity, product.id]);
 
   const handleAddToCart = async (event) => {
     event.preventDefault();
-  
+
     try {
       const token = localStorage.getItem('token');
-  
-      // Use the fetchApi utility function from cartActions.js
-      const data = await fetchApi(
-        `${BASE_URL}/orders`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-          },
-          body: JSON.stringify({ product_id: product.id, user_id: userId }),
-        }
-      );
-  
+
+      // Use the updated addToCart action to add the product to the cart
+      const data = await dispatch(addToCart(product, userId));
+
+      // Use the data returned from the action to update localQuantity and the backend
       const orderItemsData = await Promise.all(
         data.order_item_ids.map(async (orderItemId) => {
           return fetchApi(`${BASE_URL}/order_items/${orderItemId}`);
         })
       );
-  
+
       const validOrderItemsData = orderItemsData.filter(item => item !== null);
-  
       const matchingOrderItem = validOrderItemsData.find(item => item.product.id === product.id);
-  
+
       const item = {
         id: data.id,
         order: data,
@@ -104,99 +113,34 @@ function ProductDetail({ product }) {
         total_price: validOrderItemsData.reduce((acc, item) => acc + item.total_price, 0),
         unit_price: validOrderItemsData.reduce((acc, item) => acc + item.unit_price, 0),
       };
-  
-      dispatch(addToCart(item.product, data.user_id));
-  
+
+      // Update local quantity
       setLocalQuantity(item.quantity);
-  
-      await new Promise((resolve) => setTimeout(resolve, 0));
-  
-      const updatedProductInCart = cartItems.find((item) => item && item.product && item.product.id === product.id);
-  
-      if (updatedProductInCart) {
-        setLocalQuantity(updatedProductInCart.quantity);
-      } else {
-        console.error("Product not found in the cart");
-      }
+
+      // Update the backend with the new cart information
+      const updatedCartData = await fetchApi(`${BASE_URL}/orders/${data.id}`);
+      const updatedOrderItemsData = await Promise.all(
+        updatedCartData.order_item_ids.map(async (orderItemId) => {
+          return fetchApi(`${BASE_URL}/order_items/${orderItemId}`);
+        })
+      );
+
+      // Assuming updatedCartData is an array of order items, you may need to adapt this based on your API response structure
+      dispatch(initializeCart(updatedOrderItemsData, userId));
+
     } catch (error) {
       console.error('An unexpected error occurred:', error);
     }
-  };  
+  };   
   
   function handleIncreaseQuantity(productId) {
-    // Check if the product is in the cart
-    const productInCart = cartItems.find((item) => item && item.id === productId);
-  
-    console.log(productInCart);
-  
-    if (!productInCart) {
-      console.error("Product not found in the cart");
-      return;
-    }
-  
-    if (!productInCart.order_item_ids || productInCart.order_item_ids.length === 0) {
-      console.error("Order item IDs not found");
-      return;
-    }
-  
-    const increaseQuantityRequest = {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
-      },
-      body: JSON.stringify({ increase_quantity: true }),
-    };
-  
-    console.log('Sending increase quantity request:', increaseQuantityRequest);
-  
-    // Loop through all order item IDs and send increase quantity request
-    productInCart.order_item_ids.forEach((orderItemId) => {
-      fetch(`https://sokoapi.onrender.com/order_items/${orderItemId}`, increaseQuantityRequest)
-        .then(response => {
-          console.log('Received response:', response);
-  
-          if (response.ok) {
-            console.log('Quantity increased successfully');
-            // Update local quantity or dispatch an action as needed
-          } else {
-            console.log('Failed to increase quantity');
-            throw new Error('Failed to increase quantity'); 
-          }
-        })
-        .catch(error => {
-          console.error('An unexpected error occurred:', error);
-        });
-    });
+    dispatch(increaseQuantity(productId));
   }
   
-  function handleDecreaseQuantity() {
-    const orderItem = productInCart.order_item_ids.find(id => id === product.orderItemId);
-
-    if (!orderItem) {
-      console.error("Order item not found");
-      return;
-    }
-
-    fetch(`https://sokoapi.onrender.com/order_items/${orderItem}?decrease_quantity=true`, {
-      method: 'PATCH',
-    })
-      .then(response => {
-        if (response.ok) {
-          console.log('Quantity decreased successfully');
-          dispatch(decreaseQuantity(product.id));
-          setLocalQuantity(localQuantity - 1); // Update local quantity
-        } else {
-          dispatch(removeFromCart(product.id));
-          return response.json().then(data => {
-            console.error('Failed to decrease quantity:', data.errors);
-          });
-        }
-      })
-      .catch(error => {
-        console.error('An unexpected error occurred:', error);
-      });
+  function handleDecreaseQuantity(productId) {
+    dispatch(decreaseQuantity(productId));
   }
+  
 
   return (
     <>
@@ -221,7 +165,7 @@ function ProductDetail({ product }) {
                 <Rating product={product} />
                 {productInCart ? (
                   <div className="d-flex justify-content-between align-items-center m-4" style={{ width: '20em' }}>
-                    <button className="btn btn-primary" onClick={handleDecreaseQuantity}>
+                    <button className="btn btn-primary" onClick={() => handleDecreaseQuantity(product.id)}>
                       -
                     </button>
                     <span>{localQuantity !== null ? localQuantity : 'Loading...'}</span>
@@ -229,7 +173,7 @@ function ProductDetail({ product }) {
                       +
                     </button>
                     <small className="d-inline">({localQuantity !== null ? `${localQuantity} item(s) added to cart` : 'Loading...'})</small>
-                  </div>
+                  </div>  
                 ) : (
                   <div className="d-flex justify-content-between align-items-center">
                     <button className="btn btn-primary m-4" style={{ width: '100%' }} onClick={(event) => handleAddToCart(event)}>

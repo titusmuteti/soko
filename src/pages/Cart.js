@@ -46,7 +46,7 @@ const Cart = () => {
                   <div className="col-md-2">
                     <Link to={`/product/${item.id}`}>
                       <img
-                        src={item.image}
+                        src={item.product.image}
                         alt="..."
                         className="img-fluid"
                         style={{ height: '100px', width: '100px' }}
@@ -70,12 +70,12 @@ const Cart = () => {
 
                   </div>
                   <div className="col-md-8" style={{ paddingLeft: '15px', paddingTop: '10px' }}>
-                    <Link to={`/products/${item.id}`} style={{ textDecoration: "none", textDecorationColor:"none" }}>
-                      <p>{item.title}</p>
+                    <Link to={`/products/${item.product.id}`} style={{ textDecoration: "none", textDecorationColor:"none" }}>
+                      <p>{item.product.title}</p>
                     </Link>
                   </div>
                   <div className="col-md-2" style={{ textAlign: 'right' }}>
-                    <h5 className="price fw-bold">KSh{item.price}</h5>
+                    <h5 className="price fw-bold">KSh{item.product.price}</h5>
                   </div>
                   <div className="d-flex justify-content-between align-items-center m-4" style={{ width: '8em', position: 'absolute', top: 120, right: 0 }}>
                     <button onClick={() => handleDecreaseQuantity(item.id)} className='bg-orange'>-</button>
