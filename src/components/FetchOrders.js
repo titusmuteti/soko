@@ -1,25 +1,31 @@
-import React from 'react';
+import { BASE_URL } from '../redux/cartActions';
 import { initializeCart } from '../redux/cartActions';
 
 async function FetchOrders(userId, dispatch) {
   try {
-    const response = await fetch(`https://sokoapi.onrender.com/orders?user_id=${userId}`);
+    const response = await fetch(`${BASE_URL}/orders?user_id=${userId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+      },
+    });
 
     if (!response.ok) {
       console.error('Failed to fetch orders:', response);
       throw new Error('Failed to fetch orders');
     }
 
-    const userOrders = await response.json();
+    const jsonResponse = await response.json();  
 
     // Check if the response is not empty
-    if (!userOrders || userOrders.length === 0) {
+    if (!jsonResponse || jsonResponse.length === 0) {
       // No orders found, proceed to the homepage
       return Promise.resolve([]); // Resolved with an empty array to continue the flow
     }
 
     // Filter orders that belong to the logged-in user
-    const loggedInUserOrders = userOrders.filter((order) => order.user_id === userId);
+    const loggedInUserOrders = jsonResponse.filter((order) => order.user_id === userId);
 
     // Extract order item IDs from each order of the logged-in user
     const orderItemIds = loggedInUserOrders.flatMap((order) => order.order_item_ids);
@@ -31,7 +37,13 @@ async function FetchOrders(userId, dispatch) {
 
     // Fetch order items based on the IDs
     const fetchItemPromises = orderItemIds.map(itemId => {
-      return fetch(`https://sokoapi.onrender.com/order_items/${itemId}`)
+      return fetch(`${BASE_URL}/order_items/${itemId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
+      })
         .then(response => {
           if (response.ok) {
             return response.json();
@@ -57,7 +69,7 @@ async function FetchOrders(userId, dispatch) {
     dispatch(initializeCart(orderItems, userId));
   } catch (error) {
     if (error.message === 'No order items found for the user' || error.message === 'No orders found for the user') {
-      // Handle as needed, e.g., navigate('/');
+     return [];
     } else {
       console.error('An error occurred while fetching orders:', error);
     }
