@@ -6,12 +6,13 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart, removeFromCart, increaseQuantity, decreaseQuantity } from '../redux/cartActions';
 import { initializeCart } from '../redux/cartActions';
-
+import { fetchApi } from '../redux/cartActions';
+import { BASE_URL } from '../redux/cartActions';
 import DeliveryInfo from './DeliveryInfo';
 import ProductSpecification from './ProductSpecifications';
 import Rating from './Rating';
 import './cart.css';
-import FetchOrders from './FetchOrders'; 
+import FetchOrders from './FetchOrders';
 
 function ProductDetail({ product }) {
   const [showModal, setShowModal] = useState(false);
@@ -56,14 +57,15 @@ function ProductDetail({ product }) {
   useEffect(() => {
     // Update local quantity based on the updated cartItems state
     const updatedProductInCart = cartItems.find((item) => item && item.product && item.product.id === product.id);
-
+  
     if (updatedProductInCart) {
       setLocalQuantity(updatedProductInCart.quantity);
     } else {
       // Handle the case where the product is not in the cart
       console.error("Product not found in the cart");
     }
-  }, [cartItems, product.id, dispatch]);
+  }, [cartItems, product.id]);
+  
 
   const handleAddToCart = async (event) => {
     event.preventDefault();
@@ -71,81 +73,51 @@ function ProductDetail({ product }) {
     try {
       const token = localStorage.getItem('token');
   
-      const response = await fetch('https://sokoapi.onrender.com/orders', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify({ product_id: product.id, user_id: userId }),
-      });
-      
-      if (!response.ok) {
-        const data = await response.json();
-        console.error('Failed to add product to cart:', data.errors);
-        throw new Error('Failed to add product to cart');
-      }
+      // Use the fetchApi utility function from cartActions.js
+      const data = await fetchApi(
+        `${BASE_URL}/orders`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+          body: JSON.stringify({ product_id: product.id, user_id: userId }),
+        }
+      );
   
-      const data = await response.json();
-      console.log('Product added to cart successfully', data.user_id);
-  
-      // Extracting quantity, total_price, and unit_price from order_item_ids
       const orderItemsData = await Promise.all(
         data.order_item_ids.map(async (orderItemId) => {
-          const orderItemResponse = await fetch(`https://sokoapi.onrender.com/order_items/${orderItemId}`);
-          if (!orderItemResponse.ok) {
-            console.error('Failed to fetch order item details');
-            return null;
-          }
-          const orderItemData = await orderItemResponse.json();
-          return orderItemData;
+          return fetchApi(`${BASE_URL}/order_items/${orderItemId}`);
         })
       );
   
-      // Filter out null values from orderItemsData
       const validOrderItemsData = orderItemsData.filter(item => item !== null);
   
-      // Wait for all asynchronous operations to complete
-      await Promise.all([
-      ]);
-      
-    console.log(validOrderItemsData);  
-    const matchingOrderItem = validOrderItemsData.find(item => item.product.id === product.id);
-    console.log('Matching Order Item:', matchingOrderItem);
-
+      const matchingOrderItem = validOrderItemsData.find(item => item.product.id === product.id);
+  
       const item = {
         id: data.id,
         order: data,
-        product: product, // Use the 'product' parameter directly
+        product: product,
         quantity: matchingOrderItem?.quantity || 1,
         total_price: validOrderItemsData.reduce((acc, item) => acc + item.total_price, 0),
         unit_price: validOrderItemsData.reduce((acc, item) => acc + item.unit_price, 0),
       };
   
-      const updatedUserId = data.user_id;
-      console.log(item.quantity);
+      dispatch(addToCart(item.product, data.user_id));
   
-      // Pass the userId when dispatching addToCart action
-      dispatch(addToCart(item, updatedUserId));
-
-
       setLocalQuantity(item.quantity);
   
-      // Wait for the state to be updated before proceeding
       await new Promise((resolve) => setTimeout(resolve, 0));
   
-      // Update local quantity based on the updated cartItems state
       const updatedProductInCart = cartItems.find((item) => item && item.product && item.product.id === product.id);
-      console.log(updatedProductInCart);
-
+  
       if (updatedProductInCart) {
-        console.log(updatedProductInCart.quantity);
         setLocalQuantity(updatedProductInCart.quantity);
       } else {
-        // Handle the case where the product is not in the cart
         console.error("Product not found in the cart");
       }
-      
     } catch (error) {
       console.error('An unexpected error occurred:', error);
     }
