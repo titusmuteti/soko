@@ -36,6 +36,7 @@ function Login() {
   
             // Extract user ID
             const userId = user.id;
+            localStorage.setItem('user_id', userId);
   
             toast.success('Login successful');
   

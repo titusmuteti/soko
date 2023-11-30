@@ -6,7 +6,6 @@ function OrderSummary() {
   const navigate = useNavigate();
   const subtotal = localStorage.getItem('subtotal');
   const cartItemCount = localStorage.getItem('cartItemCount');
-  console.log(cartItemCount);
 
   const handleCheckout = () => {
       navigate('/payment');
