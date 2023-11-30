@@ -13,15 +13,16 @@ const Cart = () => {
 
 
   const cartItemCount = cartItems.reduce((total, item) => total + item.quantity, 0);
-
+  localStorage.setItem('cartItemCount', cartItemCount);
 
   //calculating subtotal
-  const subtotal = cartItems.reduce((total, item) => total + item.quantity * item.price, 0).toFixed(2);
+  const subtotal = cartItems.reduce((total, item) => total + item.quantity * item.product.price, 0).toFixed(2);
+  localStorage.setItem('subtotal', subtotal);
 
   function handleRemoveFromCart(productId) {
     dispatch(removeFromCart(productId));
   }
-
+ 
   function handleIncreaseQuantity(productId) {
     dispatch(increaseQuantity(productId, 1));
   }
