@@ -18,8 +18,7 @@ export const fetchApi = async (url, options) => {
 
     return responseData;
   } catch (error) {
-    console.error('An unexpected error occurred during API request:', error);
-    throw error;
+
   }
 };
 
@@ -102,7 +101,6 @@ export const addToCart = (product, userId) => async (dispatch) => {
     };
     localStorage.setItem(`cart_${userId}`, JSON.stringify(updatedCart));
   } catch (error) {
-    console.error('An unexpected error occurred:', error);
   }
 };
 
@@ -135,38 +133,40 @@ export const increaseQuantity = (productId) => async (dispatch, getState) => {
   try {
     const token = localStorage.getItem('token');
     const productInCart = getState().cart.items.find(item => item && item.product && item.product.id === productId);
-    console.log(productInCart.order.order_item_ids);
 
     if (!productInCart || !productInCart.order || !productInCart.order.order_item_ids || productInCart.order.order_item_ids.length === 0) {
       console.error("Product not found in the cart or order item IDs not found");
       return;
-    }    
+    }
 
-    const orderItemId = productInCart.order.order_item_ids[0]; // Assuming one order item per product in the cart
-    console.log(orderItemId);
+    const orderItemIds = productInCart.order.order_item_ids;
 
-    const response = await fetch(`${BASE_URL}/order_items/${orderItemId}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      },
-      body: JSON.stringify({ increase_quantity: true }),
-    });
-
-    if (response.ok) {
-      const orderItemData = await response.json();
-
-      dispatch({
-        type: 'INCREASE_QUANTITY',
-        payload: {
-          productId,
-          quantity: orderItemData.quantity,
+    for (const orderItemId of orderItemIds) {
+      const response = await fetch(`${BASE_URL}/order_items/${orderItemId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
         },
+        body: JSON.stringify({ increase_quantity: true }),
       });
-    } else {
-      console.error('Failed to increase quantity');
-      // Handle the error as needed
+
+      if (response.ok) {
+        const orderItemData = await response.json();
+
+        if (orderItemData && orderItemData.id === orderItemId) {
+          // Dispatch the action only for the specific order_item
+          dispatch({
+            type: INCREASE_QUANTITY,
+            payload: {
+              productId,
+              quantity: orderItemData.quantity,
+            },
+          });
+        }
+      } else {
+        console.error('Failed to increase quantity for order item:', orderItemId);
+      }
     }
   } catch (error) {
     console.error('An unexpected error occurred:', error);
@@ -183,24 +183,35 @@ export const decreaseQuantity = (productId) => async (dispatch, getState) => {
       return;
     }
 
-    const orderItemId = productInCart.order_item_ids[0]; // Assuming one order item per product in the cart
+    const orderItemIds = productInCart.order.order_item_ids;
 
-    const response = await fetch(`https://sokoapi.onrender.com/order_items/${orderItemId}?decrease_quantity=true`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      },
-    });
+    // Assuming multiple order items per product in the cart
+    for (const orderItemId of orderItemIds) {
+      const response = await fetch(`${BASE_URL}/order_items/${orderItemId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ decrease_quantity: true }),
+      });
 
-    if (response.ok) {
-      // Dispatch the action to update the Redux store
-      dispatch({ type: DECREASE_QUANTITY, payload: productId });
-    } else {
-      const data = await response.json();
-      console.error('Failed to decrease quantity:', data.errors);
+      if (response.ok) {
+        const orderItemData = await response.json();
+
+        dispatch({
+          type: DECREASE_QUANTITY,
+          payload: {
+            productId,
+            quantity: orderItemData.quantity,
+          },
+        });
+      } else {
+        console.error('Failed to decrease quantity for order item:', orderItemId);
+        // Handle the error as needed
+      }
     }
   } catch (error) {
-    console.error('An unexpected error occurred during quantity decrease:', error);
+    console.error('An unexpected error occurred:', error);
   }
 };
