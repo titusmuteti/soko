@@ -23,7 +23,7 @@ function NavBar() {
   const location = useLocation();
 
   //array of route paths where you want to display the NavBar
-  const showNavBarOnRoutes = ['/cart', '/payment', "/"];
+  const showNavBarOnRoutes = ['/cart', "/"];
 
   if (location.pathname.startsWith('/products/')) {
     showNavBarOnRoutes.push(location.pathname);

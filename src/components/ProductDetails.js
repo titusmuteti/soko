@@ -25,7 +25,8 @@ function ProductDetail({ product }) {
   const cartItems = useSelector((state) => state.cart.items);
   const userId = useSelector((state) => state.auth.userId);
   const productInCart = cartItems.find((item) => item && item.product && item.product.id === product.id);
-
+  
+  
   // Initialize localQuantity from localStorage on component mount
   useEffect(() => {
     const storedQuantity = localStorage.getItem(`localQuantity_${product.id}`);
