@@ -36,6 +36,8 @@ function ProductDetail({ product }) {
   useEffect(() => {
     if (productInCart) {
       setLocalQuantity(productInCart.quantity);
+    } else {
+      setLocalQuantity(1);
     }
   }, [productInCart]);
 
@@ -76,8 +78,7 @@ function ProductDetail({ product }) {
     if (updatedProductInCart) {
       setLocalQuantity(updatedProductInCart.quantity);
     } else {
-      // Handle the case where the product is not in the cart
-      console.error("Product not found in the cart");
+      return;
     }
   }, [cartItems, product.id]);
 
@@ -128,20 +129,19 @@ function ProductDetail({ product }) {
       // Assuming updatedCartData is an array of order items, you may need to adapt this based on your API response structure
       dispatch(initializeCart(updatedOrderItemsData, userId));
 
-    } catch (error) {
-      console.error('An unexpected error occurred:', error);
+    } 
+    catch (error) {
     }
   };   
   
-  function handleIncreaseQuantity(productId) {
-    dispatch(increaseQuantity(productId));
+  function handleIncreaseQuantity() {
+    dispatch(increaseQuantity(product.id));
   }
   
-  function handleDecreaseQuantity(productId) {
-    dispatch(decreaseQuantity(productId));
+  function handleDecreaseQuantity() {
+    dispatch(decreaseQuantity(product.id));
   }
   
-
   return (
     <>
       <div className="container d-flex justify-content-center mt-5">
@@ -165,22 +165,25 @@ function ProductDetail({ product }) {
                 <Rating product={product} />
                 {productInCart ? (
                   <div className="d-flex justify-content-between align-items-center m-4" style={{ width: '20em' }}>
-                    <button className="btn btn-primary" onClick={() => handleDecreaseQuantity(product.id)}>
+                    <button className="btn btn-primary" onClick={handleDecreaseQuantity}>
                       -
                     </button>
                     <span>{localQuantity !== null ? localQuantity : 'Loading...'}</span>
-                    <button className="btn btn-primary" onClick={() => handleIncreaseQuantity(product.id)}>
+                    <button className="btn btn-primary" onClick={handleIncreaseQuantity}>
                       +
                     </button>
-                    <small className="d-inline">({localQuantity !== null ? `${localQuantity} item(s) added to cart` : 'Loading...'})</small>
-                  </div>  
-                ) : (
-                  <div className="d-flex justify-content-between align-items-center">
-                    <button className="btn btn-primary m-4" style={{ width: '100%' }} onClick={(event) => handleAddToCart(event)}>
-                      <span className="me-1"><BsFillCartFill /></span>Add to Cart
-                    </button>
+                    <small className="d-inline">
+                      ({localQuantity !== null ? `${localQuantity} item(s) in cart` : 'Loading...'})
+                    </small>
                   </div>
-                )}
+                ) : (
+              <div className="d-flex justify-content-between align-items-center">
+            <Button className="btn btn-primary m-4" style={{ width: '100%' }} onClick={handleAddToCart}>
+              <span className="me-1"><BsFillCartFill /></span>Add to Cart
+            </Button>
+          </div>
+        )}
+
               </div>
             </div>
           </div>

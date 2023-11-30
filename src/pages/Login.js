@@ -31,7 +31,6 @@ function Login() {
   
         if (response.ok) {
           response.json().then((data) => {
-            console.log('Login API Response:', data);
   
             const { user, token } = data;
   
