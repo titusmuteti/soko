@@ -12,7 +12,7 @@ function CustomAddressData({ user }) {
     <>
       <div className="container col-md-12 mx-auto p-0" style={{ backgroundColor: "white", boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)" }}>
         <div className="text-center mb-4"></div>
-        {user.addresses.map((address, index) => (
+        {/* {user.addresses.map((address, index) => (
           <div key={index} style={{ border: '1px solid #ccc', borderRadius: '8px', padding: '8px', position: 'relative', maxWidth: "100%" }}>
             {index === selectedAddressIndex && (
               <div style={{ position: 'absolute', top: '8px', right: '8px', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', cursor: 'pointer' }} onClick={() => handleAddressSelect(index)}>
@@ -42,7 +42,7 @@ function CustomAddressData({ user }) {
             </div>
             <hr />
           </div>
-        ))}
+        ))} */}
       </div>
     </>
   );
