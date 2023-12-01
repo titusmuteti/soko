@@ -57,9 +57,11 @@ function Payment() {
           {<CustomAddressCard user={user} />}
         </div>
         <div style={{marginBottom:"50px"}}>
-          <Button onClick={() => setShowAddAddressPopup(true)} variant="transparent" style={{ float: "left", display: "flex", alignItems: "center", gap: "10px", color:"orange"}}>
-            <FaPlus /> ADD ADDRESS
-          </Button>
+          {!showAddAddressPopup && ( 
+            <Button onClick={() => setShowAddAddressPopup(true)} variant="transparent" style={{ float: "left", display: "flex", alignItems: "center", gap: "10px", color: "orange" }}>
+              <FaPlus /> ADD ADDRESS
+            </Button>
+          )}
           {showAddAddressPopup && (
           <AddAddressPopup onCancel={handleAddAddressCancel} onSubmit={handleAddAddressSubmit} />
           )}        
