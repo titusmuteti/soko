@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Button, Form } from 'react-bootstrap';
 
 const AddAddressPopup = ({ onCancel, onSubmit }) => {
   const [newAddress, setNewAddress] = useState({
@@ -15,26 +16,37 @@ const AddAddressPopup = ({ onCancel, onSubmit }) => {
   };
 
   return (
-    <div className="popup-container">
+    <div className="popup-container m-4">
       <div className="popup">
-        <h2>Add New Address</h2>
-        <form onSubmit={(e) => onSubmit(e, newAddress)}>
-          {/* Input fields for new address */}
-          <label>
-            Region:
-            <input
+        <Form>
+          <h5>Add New Address</h5>
+          <div className="form-group">
+            <label htmlFor="region">Region</label>
+            <Form.Control
               type="text"
+              placeholder="Enter region"
               name="region"
               value={newAddress.region}
               onChange={handleNewAddressChange}
             />
-          </label>
-          {/* Add other input fields as needed */}
-          <button type="submit">Add Address</button>
-          <button type="button" onClick={onCancel}>
+          </div>
+          <div className="form-group">
+            <label htmlFor="city">City</label>
+            <Form.Control
+              type="text"
+              placeholder="Enter city"
+              name="city"
+              value={newAddress.city}
+              onChange={handleNewAddressChange}
+            />
+          </div>
+          <Button type="submit" className="m-4">
+            Add Address
+          </Button>
+          <Button type="button" onClick={onCancel} className="m-4">
             Cancel
-          </button>
-        </form>
+          </Button>
+        </Form>
       </div>
     </div>
   );
