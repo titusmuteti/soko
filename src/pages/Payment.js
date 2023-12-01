@@ -1,13 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector } from 'react-redux';
 import { Col } from 'react-bootstrap';
 import { Button } from "react-bootstrap";
 import { FaPlus } from 'react-icons/fa';
 import CustomAddressCard from "../components/CustomAddressCard";
 import OrderSummary from "../components/OrderSummary";
+import AddAddressPopup from "../components/AddAdressPopUp";
 
 function Payment() {
   const user = useSelector((state) => state.auth.user);
+  const [showAddAddressPopup, setShowAddAddressPopup] = useState(false);
 
   const generateLabel = (number) => {
     return (
@@ -27,9 +29,17 @@ function Payment() {
     );
   };
 
-  function handleAddAddress(){
+  const handleAddAddressSubmit = async (e, newAddress) => {
+    e.preventDefault();
+    // TODO: Implement logic to update user's addresses with the newAddress data
+    // You may want to make an API request to add the new address
+    // After successfully adding the address, close the pop-up and update the UI
+    setShowAddAddressPopup(false);
+  };
 
-  }
+  const handleAddAddressCancel = () => {
+    setShowAddAddressPopup(false);
+  };
 
   return (
     <>
@@ -47,9 +57,12 @@ function Payment() {
           {<CustomAddressCard user={user} />}
         </div>
         <div style={{marginBottom:"50px"}}>
-          <Button variant="transparent" style={{ float: "left", display: "flex", alignItems: "center", gap: "10px", color:"orange"}} onClick={handleAddAddress}>
+          <Button onClick={() => setShowAddAddressPopup(true)} variant="transparent" style={{ float: "left", display: "flex", alignItems: "center", gap: "10px", color:"orange"}}>
             <FaPlus /> ADD ADDRESS
-          </Button>        
+          </Button>
+          {showAddAddressPopup && (
+          <AddAddressPopup onCancel={handleAddAddressCancel} onSubmit={handleAddAddressSubmit} />
+          )}        
         </div>
       </div>
 
