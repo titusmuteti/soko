@@ -5,12 +5,15 @@ import { Button } from "react-bootstrap";
 import { FaPlus } from 'react-icons/fa';
 import CustomAddressCard from "../components/CustomAddressCard";
 import OrderSummary from "../components/OrderSummary";
-import AddAddressPopup from "../components/AddAdressPopUp";
+import AddAddressModal from "../components/AddAdressModal";
+import EditAddressModal from "../components/EditAddressModal";
 
 function Payment() {
   const user = useSelector((state) => state.auth.user);
-  const [showAddAddressPopup, setShowAddAddressPopup] = useState(false);
-  const [selectedAddress, setSelectedAddress] = useState(null); 
+  const [showAddAddressModal, setShowAddAddressModal] = useState(false);
+  const [showEditAddressModal, setShowEditAddressModal] = useState(false);
+  const [editAddressId, setEditAddressId] = useState(null);
+  const [selectedAddress, setSelectedAddress] = useState(null);
 
   const generateLabel = (number) => {
     return (
@@ -30,16 +33,29 @@ function Payment() {
     );
   };
 
-  const handleAddAddressSubmit = async () => {
-    setShowAddAddressPopup(false);
+  const handleAddAddressSubmit = (newAddress) => {
+    // Handle any logic needed after adding the address
+    setShowAddAddressModal(false);
   };
 
-  const handleAddAddressCancel = () => {
-    setShowAddAddressPopup(false);
+  const handleEditAddressSubmit = (editedAddress) => {
+    // Handle any logic needed after editing the address
+    setShowEditAddressModal(false);
   };
 
-  const handleSelectAddress = (address) => {
+  const handleEditAddressCancel = () => {
+    setShowEditAddressModal(false);
+  };
+
+  const handleSelectAddress = (address, e) => {
+    e.preventDefault();
     setSelectedAddress(address); 
+    setEditAddressId(address.id);
+    setShowEditAddressModal(true);
+  };
+
+  const handleDeleteAddress = () => {
+    setShowEditAddressModal(false);  
   };
 
   return (
@@ -58,14 +74,14 @@ function Payment() {
           {<CustomAddressCard user={user} onSelectAddress={handleSelectAddress} />}
         </div>
         <div style={{marginBottom:"50px"}}>
-          {!showAddAddressPopup && ( 
-            <Button onClick={() => setShowAddAddressPopup(true)} variant="transparent" style={{ float: "left", display: "flex", alignItems: "center", gap: "10px", color: "orange" }}>
+        {!showAddAddressModal && ( 
+            <Button onClick={() => setShowAddAddressModal(true)} variant="transparent" style={{ float: "left", display: "flex", alignItems: "center", gap: "10px", color: "orange" }}>
               <FaPlus /> ADD ADDRESS
             </Button>
-          )}
-          {showAddAddressPopup && (
-          <AddAddressPopup onCancel={handleAddAddressCancel} onSubmit={handleAddAddressSubmit} />
-          )}        
+        )}
+          {showAddAddressModal && (
+          <AddAddressModal onCancel={() => setShowAddAddressModal(false)} onSubmit={handleAddAddressSubmit} />
+        )}        
         </div>
       </div>
 
@@ -95,6 +111,9 @@ function Payment() {
       <Col md={4} className="mt-4 ml-auto" style={{ marginLeft: '40px', width: '18%', position:"absolute", top:100, left:1350 }}>
         <OrderSummary />
       </Col>
+      {showEditAddressModal && (
+        <EditAddressModal onCancel={handleEditAddressCancel} onSubmit={handleEditAddressSubmit} editAddressId={editAddressId}  onDelete={handleDeleteAddress}/>
+      )}
     </>
   );
 }
