@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FaRegEdit } from "react-icons/fa";
 import { GrRadialSelected } from "react-icons/gr";
 import EditAddressModal from './EditAddressModal';  
-import { Modal } from 'react-bootstrap';
+import { Modal, Button } from 'react-bootstrap';
 
 function CustomAddressCard({ user, onSelectAddress }) {
   const [selectedAddressIndex, setSelectedAddressIndex] = useState(-1);
@@ -59,9 +59,9 @@ function CustomAddressCard({ user, onSelectAddress }) {
         {loggedInUser && loggedInUser.addresses.map((address, index) => (
           <div key={index} style={{ border: '1px solid #ccc', borderRadius: '8px', padding: '8px', position: 'relative', maxWidth: "100%", marginBottom:"20px" }}>
             <div style={{ position: 'absolute', top: '8px', right: '8px', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', cursor: 'pointer' }}>
-              <button onClick={(event) => handleEditAddress(event, address.id)} style={{ marginRight: '8px', color: 'white', border: 'none', borderRadius: '4px', padding: '4px' }}>
+              <Button onClick={() => handleEditAddress(address.id)} style={{ marginRight: '8px', color: 'white', border: 'none', borderRadius: '4px', padding: '4px' }}>
                 <FaRegEdit/>
-              </button>
+              </Button>
             </div>
             {index === 0 && (
               <div style={{ position: 'absolute', bottom: '8px', left: '8px', backgroundColor: 'gray', color: 'white', borderRadius: '4px', fontSize: "14px", padding: '4px', textAlign: "center" }}>
