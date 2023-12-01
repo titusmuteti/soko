@@ -19,7 +19,6 @@ const EditAddressModal = ({ onCancel, onSubmit, onDelete, editAddressId }) => {
 
           if (response.ok) {
             const addressData = await response.json();
-            console.log(addressData);
             setEditedAddress({
               region: addressData.region,
               city: addressData.city,
