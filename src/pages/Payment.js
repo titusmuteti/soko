@@ -7,6 +7,8 @@ import CustomAddressCard from "../components/CustomAddressCard";
 import OrderSummary from "../components/OrderSummary";
 import AddAddressModal from "../components/AddAdressModal";
 import EditAddressModal from "../components/EditAddressModal";
+import { FaArrowLeft } from "react-icons/fa6";
+import { Navigate, useNavigate } from "react-router-dom";
 
 function Payment() {
   const user = useSelector((state) => state.auth.user);
@@ -14,6 +16,8 @@ function Payment() {
   const [showEditAddressModal, setShowEditAddressModal] = useState(false);
   const [editAddressId, setEditAddressId] = useState(null);
   const [selectedAddress, setSelectedAddress] = useState(null);
+
+  const navigate = useNavigate();
 
   const generateLabel = (number) => {
     return (
@@ -56,6 +60,10 @@ function Payment() {
 
   const handleDeleteAddress = () => {
     setShowEditAddressModal(false);  
+  };
+
+  const handleBackArrow = () => {
+    navigate('/cart')
   };
 
   return (
@@ -108,6 +116,7 @@ function Payment() {
         <div style={{ borderBottom: "1px solid black", width: "100%", marginTop: "10px" }}></div> 
         <div></div>
       </div>
+      <Button style={{float:"left", backgroundColor:"transparent"}} onClick={handleBackArrow}><FaArrowLeft/> <small>BACK</small></Button>
       <Col md={4} className="mt-4 ml-auto" style={{ marginLeft: '40px', width: '18%', position:"absolute", top:100, left:1350 }}>
         <OrderSummary />
       </Col>
