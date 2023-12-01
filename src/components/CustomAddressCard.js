@@ -9,11 +9,7 @@ function CustomAddressData() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch(`https://sokoapi.onrender.com/users/`, {
-          headers: {
-            Authorization: `Bearer ${token}`, 
-          },
-        });
+        const response = await fetch(`https://sokoapi.onrender.com/users/`);
 
         if (response.ok) {
           const users = await response.json();
