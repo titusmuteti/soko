@@ -10,6 +10,7 @@ import AddAddressPopup from "../components/AddAdressPopUp";
 function Payment() {
   const user = useSelector((state) => state.auth.user);
   const [showAddAddressPopup, setShowAddAddressPopup] = useState(false);
+  const [selectedAddress, setSelectedAddress] = useState(null); 
 
   const generateLabel = (number) => {
     return (
@@ -29,16 +30,16 @@ function Payment() {
     );
   };
 
-  const handleAddAddressSubmit = async (e, newAddress) => {
-    e.preventDefault();
-    // TODO: Implement logic to update user's addresses with the newAddress data
-    // You may want to make an API request to add the new address
-    // After successfully adding the address, close the pop-up and update the UI
+  const handleAddAddressSubmit = async () => {
     setShowAddAddressPopup(false);
   };
 
   const handleAddAddressCancel = () => {
     setShowAddAddressPopup(false);
+  };
+
+  const handleSelectAddress = (address) => {
+    setSelectedAddress(address); 
   };
 
   return (
@@ -54,7 +55,7 @@ function Payment() {
         <div style={{ borderBottom: "1px solid black", width: "100%", marginTop: "10px" }}></div> 
         <div style={{  maxHeight: "calc(100% - 140px)" }}>
           <small>ADDRESS BOOKS</small>
-          {<CustomAddressCard user={user} />}
+          {<CustomAddressCard user={user} onSelectAddress={handleSelectAddress} />}
         </div>
         <div style={{marginBottom:"50px"}}>
           {!showAddAddressPopup && ( 

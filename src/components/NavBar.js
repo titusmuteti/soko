@@ -16,8 +16,15 @@ function NavBar() {
   const cartItems = useSelector((state) => state.cart.items);
   const cartItemCount = cartItems.reduce((total, item) => total + item.quantity, 0);
 
-  const user = JSON.parse(localStorage.getItem('user'));
-  const first_name = user ? user.first_name : null;
+  const userString = localStorage.getItem('user');
+  let user;
+  let first_name;
+  
+  try {
+    user = JSON.parse(userString);
+    first_name = user ? user.first_name : null;
+  } catch (error) {
+  }
 
   const dispatch = useDispatch();
   const location = useLocation();
