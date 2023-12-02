@@ -45,8 +45,8 @@ function CustomAddressSection({ user, onSelectAddress, selectedAddress, onAddAdd
       <h6></h6>
       <div className="container col-m-4 p-4" style={{ backgroundColor: "white", maxWidth: "60em", marginTop: "20px", position: "relative", height: "100%" }}>
         <h5>1. CUSTOM ADDRESS</h5>
-        <small className="m-4">Address books ({numberOfAddresses})</small>
-
+        <hr/>
+        <small className="m-2">Address books ({numberOfAddresses})</small>
         {/* Show either all addresses or just one based on showAllAddresses */}
         {showAllAddresses ? (
           <>
