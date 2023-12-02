@@ -26,31 +26,27 @@ function Payment() {
 
   return (
     <>
-      {activeContainer === 1 && (
-        <CustomAddressSection
-          user={user}
-          onSelectAddress={(address) => {
-            setSelectedAddress(address);
-            setEditAddressId(address.id);
-            setShowEditAddressModal(true);
-          }}
-          selectedAddress={selectedAddress}
-          onAddAddress={() => setShowEditAddressModal(true)}
-          onNext={handleNext}
-        />
-      )}
+      <CustomAddressSection
+        user={user}
+        onSelectAddress={(address) => {
+          setSelectedAddress(address);
+          setEditAddressId(address.id);
+          setShowEditAddressModal(true);
+        }}
+        selectedAddress={selectedAddress}
+        onAddAddress={() => setShowEditAddressModal(true)}
+        onNext={handleNext}
+        isVisible={activeContainer === 1}
+      />
 
-      {activeContainer === 2 && (
-        <>
-          <DeliveryDetailsSection selectedAddress={selectedAddress} />
-        </>
-      )}
+      <DeliveryDetailsSection
+        selectedAddress={selectedAddress}
+        isVisible={activeContainer === 2}
+      />
 
-      {activeContainer === 3 && (
-        <>
-          <PaymentMethodSection />
-        </>
-      )}
+      <PaymentMethodSection
+        isVisible={activeContainer === 3}
+      />
 
       <Col md={4} className="mt-4 ml-auto" style={{ marginLeft: '40px', width: '18%', position:"absolute", top:0, left:1350 }}>
         <OrderSummary />
