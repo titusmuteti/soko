@@ -44,13 +44,18 @@ function CustomAddressCard({ user, onSelectAddress }) {
     setSelectedAddressIndex(index);
     const address = loggedInUser.addresses[index];
     onSelectAddress(address);
-    setShowEditModal(false);
   };  
 
   const handleEditAddress = (addressId) => {
     setEditAddressId(addressId);
     setShowEditModal(true);
-  };  
+  };
+  
+  const handleParagraphClick = (index) => {
+    if (!showEditModal) {
+      handleAddressSelect(index);
+    }
+  };
 
   return (
     <>
@@ -69,7 +74,7 @@ function CustomAddressCard({ user, onSelectAddress }) {
               </div>
             )}
             <div className="row">
-              <div className="col-md-6" onClick={() => handleAddressSelect(index)}>
+              <div className="col-md-6" onClick={() => handleParagraphClick(index)}>
                 <p style={{ display: 'flex', alignItems: 'center', paddingLeft: index === selectedAddressIndex ? '30px' : '0' }} >
                   {index === selectedAddressIndex && (
                     <GrRadialSelected style={{ color: 'orang', width: '20px', height: '20px', position: 'absolute', left: '8px' }} />
@@ -79,7 +84,7 @@ function CustomAddressCard({ user, onSelectAddress }) {
                 <p><small>{address.region} | {address.city} | {loggedInUser.phone_number} | {loggedInUser.email}</small></p>
                 <div className="text-end"></div>
               </div>
-            </div>
+            </div>   
             <hr />
           </div>
         ))}
