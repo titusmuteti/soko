@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Form, Col, Row } from "react-bootstrap";
 
-function DeliveryDetailsSection({ selectedAddress }) {
+function DeliveryDetailsSection({ selectedAddress, isVisible }) {
   const [deliveryOption, setDeliveryOption] = useState("doorstep");
 
   const handleDeliveryOptionChange = (event) => {
@@ -9,9 +9,9 @@ function DeliveryDetailsSection({ selectedAddress }) {
   };
 
   return (
-    <div className="container col-m-4 p-4" style={{ backgroundColor: "white", maxWidth: "60em", marginTop: "20px", position: "relative", height: "100%" }}>
+    <div className="container col-m-4 p-4" style={{ display: isVisible ? 'block' : 'none', backgroundColor: "white", maxWidth: "60em", marginTop: "20px", position: "relative", height: "100%" }}>
       <h5>2. DELIVERY OPTIONS</h5>
-      <hr/>
+      <hr />
       <Form>
         <Form.Group as={Row}>
           <Form.Label as="legend" column sm={12}>
