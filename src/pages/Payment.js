@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import { Col } from 'react-bootstrap';
 import { Button } from "react-bootstrap";
@@ -15,6 +16,7 @@ function Payment() {
   const [editAddressId, setEditAddressId] = useState(null);
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [activeContainer, setActiveContainer] = useState(1);
+  const navigate = useNavigate();
 
   const handleBackArrow = () => {
     setActiveContainer(activeContainer - 1);
@@ -24,47 +26,55 @@ function Payment() {
     setActiveContainer(activeContainer + 1);
   };
 
+  const handlePreviousPage = () => {
+    navigate('/cart');
+  };
+
   return (
     <>
-      <CustomAddressSection
-        user={user}
-        onSelectAddress={(address) => {
-          setSelectedAddress(address);
-          setEditAddressId(address.id);
-          setShowEditAddressModal(true);
-        }}
-        selectedAddress={selectedAddress}
-        onAddAddress={() => setShowEditAddressModal(true)}
-        onNext={handleNext}
-        isVisible={activeContainer === 1}
-      />
-
-      <DeliveryDetailsSection
-        selectedAddress={selectedAddress}
-        isVisible={activeContainer === 2}
-      />
-
-      <PaymentMethodSection
-        isVisible={activeContainer === 3}
-      />
-
-      <Col md={4} className="mt-4 ml-auto" style={{ marginLeft: '40px', width: '18%', position:"absolute", top:0, left:1350 }}>
-        <OrderSummary />
-      </Col>
-
-      {showEditAddressModal && (
-        <EditAddressModal
-          onCancel={() => setShowEditAddressModal(false)}
-          onSubmit={(editedAddress) => {
-            setShowEditAddressModal(false);
+      <div className="container col-m-4 p-4" style={{ backgroundColor: "white", maxWidth: "60em", marginTop: "20px", position: "relative", height: "100%" }}>
+        <CustomAddressSection
+          user={user}
+          onSelectAddress={(address) => {
+            setSelectedAddress(address);
+            setEditAddressId(address.id);
+            setShowEditAddressModal(true);
           }}
-          editAddressId={editAddressId}
-          onDelete={() => {
-            setShowEditAddressModal(false);
-            setSelectedAddress(null);
-          }}
+          selectedAddress={selectedAddress}
+          onAddAddress={() => setShowEditAddressModal(true)}
+          onNext={handleNext}
+          isVisible={activeContainer === 1}
         />
-      )}
+
+        <DeliveryDetailsSection
+          selectedAddress={selectedAddress}
+          isVisible={activeContainer === 2}
+        />
+
+        <PaymentMethodSection
+          isVisible={activeContainer === 3}
+        />
+
+        {/* Updated styles for better positioning */}
+        <Col md={4} className="mt-4 ml-auto" style={{ width: '30%', position: "absolute", top: "0px", left: "62em" }}>
+          <OrderSummary />
+        </Col>
+
+        {showEditAddressModal && (
+          <EditAddressModal
+            onCancel={() => setShowEditAddressModal(false)}
+            onSubmit={(editedAddress) => {
+              setShowEditAddressModal(false);
+            }}
+            editAddressId={editAddressId}
+            onDelete={() => {
+              setShowEditAddressModal(false);
+              setSelectedAddress(null);
+            }}
+          />
+        )}
+        <Button style={{ background: "transparent", float: "left", border: "none", marginTop: "40px" }} onClick={handlePreviousPage}> {<FaArrowLeft />} <small>Back to cart</small></Button>
+      </div>
     </>
   );
 }
